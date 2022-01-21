@@ -1,0 +1,41 @@
+.trash-icon {
+    width: 16px;
+    height: 16px;
+    background-image: url('/icons/trash.svg');
+    background-repeat: no-repeat;
+}
+
+.trash-icon:hover {
+    width: 16px;
+    height: 16px;
+    background-image: url('/icons/trash-fill.svg');
+    background-repeat: no-repeat;
+}
+
+.square-icon {
+    width: 16px;
+    height: 16px;
+    background-image: url('/icons/square.svg');
+    background-repeat: no-repeat;
+}
+
+.square-icon:hover {
+    width: 16px;
+    height: 16px;
+    background-image: url('/icons/square-fill.svg');
+    background-repeat: no-repeat;
+}
+
+.check-square-icon {
+    width: 16px;
+    height: 16px;
+    background-image: url('/icons/check-square.svg');
+    background-repeat: no-repeat;
+}
+
+.check-square-icon:hover {
+    width: 16px;
+    height: 16px;
+    background-image: url('/icons/check-square-fill.svg');
+    background-repeat: no-repeat;
+}

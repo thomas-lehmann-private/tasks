@@ -1,0 +1,42 @@
+{
+    "id": "/Todo",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "title": {
+            "type": "string",
+            "required": true,
+            "minLength": 5
+        },
+        "description": {
+            "type": "string",
+            "required": true,
+            "minLength": 5
+        },
+        "created": {
+            "type": "string",
+            "format": "date-time",
+            "required": true
+        },
+        "changed": {
+            "type": "string",
+            "format": "date-time",
+            "required": true
+        },
+        "done": {
+            "type": "bool",
+            "required": true
+        },
+        "tags": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "minLength": 3
+            }
+        }
+    },
+    "additionalProperties": false
+}
