@@ -28,8 +28,9 @@ const tasksManagerApp = {
   data: function () {
     return {
       model: {
-        newTask: { id: '', title: '', description: '', done: false },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null }
+        priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
+        newTask: { id: '', title: '', description: '', done: false, priority: 3 },
+        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3 }
       },
       tasks: [],
       searchText: ''
@@ -51,6 +52,12 @@ const tasksManagerApp = {
           return +1
         }
         if (!taskA.done && taskB.done) {
+          return -1
+        }
+        if (taskA.priority > taskB.priority) {
+          return +1
+        }
+        if (taskA.priority < taskB.priority) {
           return -1
         }
         return taskA.title.localeCompare(taskB.title)

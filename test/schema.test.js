@@ -162,4 +162,17 @@ describe('test schema', () => {
     }
     assert.equal(schema.validate(invalidData), false)
   })
+
+  it('testing transformation', () => {
+    const validData = {
+      title: 'test title',
+      description: 'test description',
+      created: new Date().toISOString(),
+      changed: new Date().toISOString(),
+      done: false
+    }
+
+    const result = schema.transform(validData)
+    assert.equal(result.priority, 3)
+  })
 })

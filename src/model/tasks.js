@@ -47,7 +47,7 @@ module.exports.load = function (strPathAndFileName) {
     const loadedData = JSON.parse(fs.readFileSync(strPathAndFileName))
     data.clear()
     for (let iTask = 0; iTask < loadedData.length; ++iTask) {
-      data.set(loadedData[iTask].id, loadedData[iTask])
+      data.set(loadedData[iTask].id, schema.transform(loadedData[iTask]))
     }
     dataModified = false
   }

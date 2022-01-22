@@ -53,6 +53,7 @@
                             <div class="d-flex small mt-2">
                                 <div><span class="fw-bold">Created:</span><span class="fst-italic ps-2">{{ task.created }}</span></div>
                                 <div><span class="fw-bold ps-2">Changed:</span><span class="fst-italic ps-2">{{ task.changed }}</span></div>
+                                <div><span class="fw-bold ps-2">Priority:</span><span class="fst-italic ps-2">{{ model.priorityMap[task.priority] }}</span></div>
                             </div>
                         </td>
                         <td>
@@ -124,6 +125,16 @@
                                     <label class="form-label fw-bold">Description</label>
                                     <input class="form-control" type="text" placeholder="Description"
                                            v-model="model.editTask.description">
+                                </div>
+                                <div class="mt-2">
+                                    <label class="form-label fw-bold">Priority</label>
+                                    <select class="form-select" aria-label="Select Priority" v-model="model.editTask.priority">
+                                        <option value="1">{{ model.priorityMap[1]}}</option>
+                                        <option value="2">{{ model.priorityMap[2]}}</option>
+                                        <option value="3">{{ model.priorityMap[3]}}</option>
+                                        <option value="4">{{ model.priorityMap[4]}}</option>
+                                        <option value="5">{{ model.priorityMap[5]}}</option>
+                                      </select>    
                                 </div>
                             </form>
                         </div>

@@ -29,5 +29,20 @@ function validate (object) {
   return result.errors.length === 0
 }
 
+/**
+ * Adding missing fields with default.
+ *
+ * @param {object} task a task object
+ * @returns the passed task object (eventually modified).
+ */
+function transform (task) {
+  if (!('priority' in task)) {
+    task.priority = 3
+  }
+
+  return task
+}
+
 exports.validate = validate
+exports.transform = transform
 exports.SCHEMA = SCHEMA

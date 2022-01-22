@@ -13,3 +13,7 @@ npm install
 npm run build
 npm run service
 ```
+
+## Links
+
+ - https://github.com/tdegrunt/jsonschema
