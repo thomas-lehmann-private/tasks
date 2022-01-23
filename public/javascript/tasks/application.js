@@ -29,8 +29,9 @@ const tasksManagerApp = {
     return {
       model: {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
-        newTask: { id: '', title: '', description: '', done: false, priority: 3, workingTime: 0 },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, workingTime: 0 }
+        complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
+        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTime: 0 },
+        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTime: 0 }
       },
       options: { showDoneTasks: false },
       workingTimer: {
