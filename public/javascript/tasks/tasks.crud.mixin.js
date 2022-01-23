@@ -39,7 +39,8 @@ const tasksCrudMixin = { // eslint-disable-line
         created: task.created,
         changed: task.changed,
         done: task.done,
-        priority: task.priority
+        priority: task.priority,
+        workingTime: task.workingTime
       }
     },
 

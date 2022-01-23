@@ -21,16 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/* global tasksCrudMixin */
+/* global tasksCrudMixin tasksToolsMixin */
 
 const tasksManagerApp = {
-  mixins: [tasksCrudMixin],
+  mixins: [tasksToolsMixin, tasksCrudMixin],
   data: function () {
     return {
       model: {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
-        newTask: { id: '', title: '', description: '', done: false, priority: 3 },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3 }
+        newTask: { id: '', title: '', description: '', done: false, priority: 3, workingTime: 0 },
+        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, workingTime: 0 }
+      },
+      options: { showDoneTasks: false },
+      workingTimer: {
+        enabled: false,
+        start: null, // will be a valid start date
+        taskId: '', // will be set by clicking on the clock icon at a specific task
+        humanReadable: '' // will be adjusted via interval timer
       },
       tasks: [],
       searchText: ''
@@ -38,12 +45,33 @@ const tasksManagerApp = {
   },
 
   created: function () {
+    // get all tasks from the REST service
     this.getTasks()
   },
 
   methods: {
     editTask: function (task) {
+      // the dialog popup itself is handled via bootstrap
       this.model.editTask = this.cloneTask(task)
+    },
+
+    toggleWorkingTimer: function (id) {
+      if (this.workingTimer.enabled) {
+        this.workingTimer.enabled = false
+        // add working time to task
+        const workingTime = Math.trunc((new Date() - this.workingTimer.start) / 1000)
+        const index = this.tasks.findIndex(entry => entry.id === this.workingTimer.taskId)
+        const clonedTask = this.cloneTask(this.tasks[index])
+        clonedTask.workingTime += workingTime
+        this.updateTask(clonedTask)
+      } else {
+        this.workingTimer = { enabled: true, start: new Date(), taskId: id, humanReadable: '' }
+
+        setInterval(() => {
+          this.workingTimer.humanReadable = this.workingTimeToHumanReadable(
+            Math.trunc((new Date() - this.workingTimer.start) / 1000))
+        }, 1000)
+      }
     },
 
     sortedTasks: function () {
@@ -54,13 +82,13 @@ const tasksManagerApp = {
         if (!taskA.done && taskB.done) {
           return -1
         }
-        if (taskA.priority > taskB.priority) {
-          return +1
+
+        let diff = this.compareNumbers(taskA.priority, taskB.priority)
+        if (diff === 0) {
+          diff = taskA.title.localeCompare(taskB.title)
         }
-        if (taskA.priority < taskB.priority) {
-          return -1
-        }
-        return taskA.title.localeCompare(taskB.title)
+
+        return diff
       })
     }
   },
@@ -69,6 +97,10 @@ const tasksManagerApp = {
     filteredTasks: function () {
       return this.sortedTasks().filter(task => {
         const theSearchText = this.searchText.toLowerCase()
+
+        if (!this.options.showDoneTasks && task.done) {
+          return false
+        }
 
         if (task.title.toLowerCase().indexOf(theSearchText) >= 0) {
           return true
@@ -84,5 +116,4 @@ const tasksManagerApp = {
 }
 
 const app = Vue.createApp(tasksManagerApp) // eslint-disable-line
-app.component('newTaskDialog', { template: '#new-task-dialog-template' })
 app.mount('#application')

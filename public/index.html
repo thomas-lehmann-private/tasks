@@ -27,9 +27,32 @@
                     <span class="navbar-brand mb-0 h1">Simple Tasks Manager</span>
 
                     <form class="d-flex">
+                        <button v-if="workingTimer.enabled" class="btn btn-danger text-nowrap" type="button" v-on:click="toggleWorkingTimer(workingTimer.taskId)">
+                            <span class="bi-clock"></span>
+                            Working timer enabled: {{ workingTimer.humanReadable }}
+                        </button>
+
+                        <!-- Options dropdown -->
+                        <div class="dropdown text-white bg-dark">
+                            <button class="btn dropdown-toggle text-white bg-dark" type="button" id="xdropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                              Options
+                            </button>
+                            <ul class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <button class="dropdown-item text-white" type="button" v-on:click="options.showDoneTasks = !options.showDoneTasks">
+                                        <span v-bind:class="{'bi-square': !options.showDoneTasks, 'bi-check-square': options.showDoneTasks}"></span>
+                                        Show done tasks
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Button to create a new task -->
                         <button class="btn btn-success ms-2 text-nowrap" type="button"
                                 data-bs-toggle="modal" data-bs-target="#new-task-dialog">
                                 Create Task</button>
+
+                        <!-- Input for searching and filtering tasks -->
                         <input class="form-control ms-2"
                                type="search" placeholder="Search" aria-label="Search"
                                v-model="searchText">
@@ -48,21 +71,31 @@
                 <tbody>
                     <tr v-for="task in filteredTasks">
                         <td v-bind:class="{'text-decoration-line-through': task.done}">
-                            <div class="fs-4">{{ task.title }}</div>
+                            <div class="fs-4">
+                                <span v-if="workingTimer.enabled && workingTimer.taskId === task.id"
+                                class="ms-1 bi-clock"
+                                ></span>
+                                {{ task.title }}
+                            </div>
                             {{ task.description }}
                             <div class="d-flex small mt-2">
                                 <div><span class="fw-bold">Created:</span><span class="fst-italic ps-2">{{ task.created }}</span></div>
                                 <div><span class="fw-bold ps-2">Changed:</span><span class="fst-italic ps-2">{{ task.changed }}</span></div>
                                 <div><span class="fw-bold ps-2">Priority:</span><span class="fst-italic ps-2">{{ model.priorityMap[task.priority] }}</span></div>
+                                <div><span v-if="task.workingTime > 0" class="fw-bold ps-2">Working Time:</span><span class="fst-italic ps-2">{{ workingTimeToHumanReadable(task.workingTime) }}</span></div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex">
                                 <span class="ms-1" v-bind:class="{'bi-square': !task.done, 'bi-check-square': task.done}"
-                                      v-bind:title="'Ändern des Status für: ' + task.title"
+                                      v-bind:title="'Toggle done state for: ' + task.title"
                                       v-on:click="toggleDone(task)"></span>
+                                <span v-if="!workingTimer.enabled"
+                                      class="ms-1 bi-clock"
+                                      v-bind:title="'Activate working timer for: ' + task.title"
+                                      v-on:click="toggleWorkingTimer(task.id)"></span>
                                 <span class="ms-1 bi-pencil"
-                                      v-bind:title="'Ändern der Task für: ' + task.title"
+                                      v-bind:title="'Edit task for: ' + task.title"
                                       data-bs-toggle="modal" data-bs-target="#edit-task-dialog"
                                       v-on:click="editTask(task)"></span>
                                 <span class="ms-1 bi-trash"
@@ -147,6 +180,7 @@
             </div>
         </div>
 
+        <script src="/javascript/tasks/tasks.tools.mixin.js"></script>
         <script src="/javascript/tasks/tasks.crud.mixin.js"></script>
         <script src="/javascript/tasks/application.js"></script>
     </body>

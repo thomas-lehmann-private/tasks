@@ -40,6 +40,10 @@ function transform (task) {
     task.priority = 3
   }
 
+  if (!('workingTime' in task)) {
+    task.workingTime = 0
+  }
+
   return task
 }
 

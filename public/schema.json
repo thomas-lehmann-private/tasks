@@ -35,6 +35,10 @@
             "minimum": 1,
             "maximum": 5
         },
+        "workingTime": {
+            "type": "int",
+            "minimum": 0
+        },
         "tags": {
             "type": "array",
             "items": {
