@@ -31,7 +31,7 @@ const tasksManagerApp = {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
         complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
         newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTime: 0 },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTime: 0 }
+        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTime: '' }
       },
       options: { showDoneTasks: false },
       workingTimer: {
@@ -51,9 +51,15 @@ const tasksManagerApp = {
   },
 
   methods: {
-    editTask: function (task) {
+    editTaskUI: function (task) {
       // the dialog popup itself is handled via bootstrap
       this.model.editTask = this.cloneTask(task)
+      this.model.editTask.workingTime = this.workingTimeToHumanReadable(task.workingTime)
+    },
+
+    updateTaskUI: function () {
+      this.model.editTask.workingTime = this.workingTimeFromHumanReadable(this.model.editTask.workingTime)
+      this.updateTask(this.model.editTask)
     },
 
     toggleWorkingTimer: function (id) {
@@ -73,6 +79,21 @@ const tasksManagerApp = {
             Math.trunc((new Date() - this.workingTimer.start) / 1000))
         }, 1000)
       }
+    },
+
+    /**
+     * Get working tome for today in human readable format.
+     *
+     * @returns working time in human readable format.
+     */
+    getWorkingTimeForTodayHumanReadable: function () {
+      let sumWorkingTime = 0
+      for (let iTask = 0; iTask < this.tasks.length; ++iTask) {
+        if (this.isToday(new Date(this.tasks[iTask].changed))) {
+          sumWorkingTime += this.tasks[iTask].workingTime
+        }
+      }
+      return this.workingTimeToHumanReadable(sumWorkingTime)
     },
 
     sortedTasks: function () {

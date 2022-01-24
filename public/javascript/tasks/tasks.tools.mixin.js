@@ -60,6 +60,50 @@ const tasksToolsMixin = { // eslint-disable-line
                 ((minutes > 0) ? minutes + 'm' : '') +
                 ((seconds > 0) ? seconds + 's' : '')
       return text.trim()
+    },
+
+    /**
+     * Get working time from human readable format.
+     *
+     * @param {*} durationAsString working time in human readable format
+     * @returns working time in seconds.
+     */
+    workingTimeFromHumanReadable: function (durationAsString) {
+      const details = durationAsString.match(/(\d+d)*(\d+h)*(\d+m)*(\d+s)*/)
+      const factors = [60 * 60 * 24, 60 * 60, 60, 1]
+      const limits = [365, 23, 59, 59]
+
+      let consumedLength = 0
+      let durationInSeconds = 0
+
+      for (let ix = 1; ix <= 4; ++ix) {
+        if (details[ix] !== undefined) {
+          const strValue = details[ix].substring(0, details[ix].length - 1)
+          const intValue = parseInt(strValue)
+          if (intValue > 0 && intValue <= limits[ix - 1]) {
+            durationInSeconds += intValue * factors[ix - 1]
+            consumedLength += details[ix].length
+          }
+        }
+      }
+
+      if (consumedLength === durationAsString.length) {
+        return durationInSeconds
+      }
+
+      return undefined
+    },
+
+    /**
+     * Check wether given date is today.
+     *
+     * @param {date} date some date
+     * @returns true when given date is today otherwise false
+     */
+    isToday: function (date) {
+      const now = new Date()
+      // note: getDate means 'getDay' but that method does not exist.
+      return date.getYear() === now.getYear() && date.getMonth() === now.getMonth() && date.getDate() === now.getDate()
     }
   }
 }
