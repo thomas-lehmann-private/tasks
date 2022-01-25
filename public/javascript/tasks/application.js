@@ -21,17 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/* global tasksCrudMixin tasksToolsMixin */
+/* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin */
 
 const tasksManagerApp = {
-  mixins: [tasksToolsMixin, tasksCrudMixin],
+  mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin],
   data: function () {
     return {
       model: {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
         complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
-        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTime: 0 },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTime: '' }
+        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [] },
+        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTimes: [] },
+        workingTime: ''
       },
       options: { showDoneTasks: false },
       workingTimer: {
@@ -54,11 +55,20 @@ const tasksManagerApp = {
     editTaskUI: function (task) {
       // the dialog popup itself is handled via bootstrap
       this.model.editTask = this.cloneTask(task)
-      this.model.editTask.workingTime = this.workingTimeToHumanReadable(task.workingTime)
+      this.model.workingTime = ''
     },
 
     updateTaskUI: function () {
-      this.model.editTask.workingTime = this.workingTimeFromHumanReadable(this.model.editTask.workingTime)
+      const workingTime = this.workingTimeFromHumanReadable(this.model.workingTime)
+      console.log(workingTime)
+
+      if (workingTime > 0) {
+        this.model.editTask.workingTimes.push({
+          created: new Date(),
+          workingTime: workingTime
+        })
+      }
+
       this.updateTask(this.model.editTask)
     },
 
@@ -69,7 +79,7 @@ const tasksManagerApp = {
         const workingTime = Math.trunc((new Date() - this.workingTimer.start) / 1000)
         const index = this.tasks.findIndex(entry => entry.id === this.workingTimer.taskId)
         const clonedTask = this.cloneTask(this.tasks[index])
-        clonedTask.workingTime += workingTime
+        clonedTask.workingTimes.push({ created: new Date(), workingTime: workingTime })
         this.updateTask(clonedTask)
       } else {
         this.workingTimer = { enabled: true, start: new Date(), taskId: id, humanReadable: '' }
@@ -81,19 +91,10 @@ const tasksManagerApp = {
       }
     },
 
-    /**
-     * Get working tome for today in human readable format.
-     *
-     * @returns working time in human readable format.
-     */
-    getWorkingTimeForTodayHumanReadable: function () {
-      let sumWorkingTime = 0
-      for (let iTask = 0; iTask < this.tasks.length; ++iTask) {
-        if (this.isToday(new Date(this.tasks[iTask].changed))) {
-          sumWorkingTime += this.tasks[iTask].workingTime
-        }
-      }
-      return this.workingTimeToHumanReadable(sumWorkingTime)
+    deleteWorkingTime: function (workingTimeEntry) {
+      const index = this.model.editTask.workingTimes.findIndex(entry =>
+        entry.workingTime === workingTimeEntry.workingTime && entry.created === workingTimeEntry.created)
+      this.model.editTask.workingTimes.splice(index, 1)
     },
 
     sortedTasks: function () {

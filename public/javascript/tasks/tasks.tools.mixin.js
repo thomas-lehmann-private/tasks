@@ -65,7 +65,7 @@ const tasksToolsMixin = { // eslint-disable-line
     /**
      * Get working time from human readable format.
      *
-     * @param {*} durationAsString working time in human readable format
+     * @param {string} durationAsString working time in human readable format
      * @returns working time in seconds.
      */
     workingTimeFromHumanReadable: function (durationAsString) {
@@ -107,3 +107,5 @@ const tasksToolsMixin = { // eslint-disable-line
     }
   }
 }
+
+exports.tasksToolsMixin = tasksToolsMixin

@@ -10,7 +10,7 @@
         "done": false,
         "priority": 2,
         "complexity": 2,
-        "workingTime": 0,
+        "workingTimes": [],
         "id": "88eb19ea-1439-48cc-8e65-e92faa022ec9"
     },
     {
@@ -24,7 +24,7 @@
         "done": false,
         "priority": 3,
         "complexity": 1,
-        "workingTime": 0,
+        "workingTimes": [],
         "id": "92f6d28c-54cf-4197-92ab-5ab967faa346"
     }
 ]

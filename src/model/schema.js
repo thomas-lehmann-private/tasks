@@ -44,8 +44,9 @@ function transform (task) {
     task.complexity = 3
   }
 
-  if (!('workingTime' in task)) {
-    task.workingTime = 0
+  if ('workingTime' in task) {
+    task.workingTimes = [{ created: task.changed, workingTime: task.workingTime }]
+    delete task.workingTime
   }
 
   return task

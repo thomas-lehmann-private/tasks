@@ -17,6 +17,38 @@
             body {
                 margin-top: 60px !important;
             }
+
+            /** Keeping tabs with same height -> */
+            .tab-content {
+                 display: flex;
+            }
+
+            .tab-content > .tab-pane {
+                display: block;
+                visibility: hidden;
+                margin-right: -100%;
+                width: 100%;
+            }
+
+            .tab-content > .active {
+                visibility: visible;
+            }
+            /** <- Keeping tabs with same height */
+
+            .border-left {
+                border-left: 1px solid;
+                border-color: #dee2e6 #dee2e6 #fff;
+            }
+
+            .border-right {
+                border-right: 1px solid;
+                border-color: #dee2e6 #dee2e6 #fff;
+            }
+
+            .border-bottom {
+                border-right: 1px solid;
+                border-color: #dee2e6 #dee2e6 #fff;
+            }
         </style>
     </head>
 
@@ -44,9 +76,9 @@
                             <td>Filtered tasks</td>
                             <td>{{ filteredTasks.length }}</td>
                         </tr>
-                        <tr v-if="getWorkingTimeForTodayHumanReadable() !== ''">
+                        <tr v-if="getWorkingTimeForTodayHumanReadable(tasks) !== ''">
                             <td>Working Time for today</td>
-                            <td>{{ getWorkingTimeForTodayHumanReadable() }}</td>
+                            <td>{{ getWorkingTimeForTodayHumanReadable(tasks) }}</td>
                         </tr>
                     </table>
                 </table>
@@ -115,7 +147,7 @@
                                     <div><span class="fw-bold ps-2">Changed:</span><span class="fst-italic ps-2">{{ task.changed }}</span></div>
                                     <div><span class="fw-bold ps-2">Priority:</span><span class="fst-italic ps-2">{{ model.priorityMap[task.priority] }}</span></div>
                                     <div><span class="fw-bold ps-2">Complexity:</span><span class="fst-italic ps-2">{{ model.complexityMap[task.complexity] }}</span></div>
-                                    <div><span v-if="task.workingTime > 0" class="fw-bold ps-2">Working Time:</span><span class="fst-italic ps-2">{{ workingTimeToHumanReadable(task.workingTime) }}</span></div>
+                                    <div><span v-if="getWorkingTimeForTask(task) > 0" class="fw-bold ps-2">Working Time:</span><span class="fst-italic ps-2">{{ getWorkingTimeForTaskHumanReadable(task) }}</span></div>
                                 </div>
                             </td>
                             <td>
@@ -197,47 +229,84 @@
                                 <h5 class="modal-title">Edit Task Dialog</h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+
                             <div class="modal-body">
-                                <form>
-                                    <div>
-                                        <label class="form-label fw-bold">Id</label>
-                                        <input class="form-control" type="text" readonly placeholder="Title" v-model="model.editTask.id" autofocus>
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <button class="nav-link active" type="button"
+                                                data-bs-toggle="tab" data-bs-target="#edit-task-main">Main</button>
+                                    </li>
+                                    <li class="nav-item">
+                                        <button class="nav-link" type="button"
+                                                data-bs-toggle="tab" data-bs-target="#edit-task-working-times">Working Times</button>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active border-left border-bottom border-right p-2" id="edit-task-main">
+                                        <form>
+                                            <div>
+                                                <label class="form-label fw-bold">Id</label>
+                                                <input class="form-control" type="text" readonly placeholder="Title" v-model="model.editTask.id" autofocus>
+                                            </div>
+                                            <div class="mt-2">
+                                                <label class="form-label fw-bold">Title</label>
+                                                <input class="form-control" type="text" placeholder="Title" v-model="model.editTask.title" autofocus>
+                                            </div>
+                                            <div class="mt-2">
+                                                <label class="form-label fw-bold">Description</label>
+                                                <input class="form-control" type="text" placeholder="Description"
+                                                    v-model="model.editTask.description">
+                                            </div>
+                                            <div class="mt-2">
+                                                <label class="form-label fw-bold">Priority</label>
+                                                <select class="form-select" aria-label="Select Priority" v-model="model.editTask.priority">
+                                                    <option value="1">{{ model.priorityMap[1]}}</option>
+                                                    <option value="2">{{ model.priorityMap[2]}}</option>
+                                                    <option value="3">{{ model.priorityMap[3]}}</option>
+                                                    <option value="4">{{ model.priorityMap[4]}}</option>
+                                                    <option value="5">{{ model.priorityMap[5]}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="mt-2">
+                                                <label class="form-label fw-bold">Complexity</label>
+                                                <select class="form-select" aria-label="Select Complexity" v-model="model.editTask.complexity">
+                                                    <option value="1">{{ model.complexityMap[1]}}</option>
+                                                    <option value="2">{{ model.complexityMap[2]}}</option>
+                                                    <option value="3">{{ model.complexityMap[3]}}</option>
+                                                    <option value="4">{{ model.complexityMap[4]}}</option>
+                                                    <option value="5">{{ model.complexityMap[5]}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="mt-2">
+                                                <label class="form-label fw-bold">Working Time</label>
+                                                <input class="form-control" type="text" placeholder="Working Time" v-model="model.workingTime">
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Title</label>
-                                        <input class="form-control" type="text" placeholder="Title" v-model="model.editTask.title" autofocus>
+
+                                    <div class="tab-pane fade border-left border-bottom border-right p-2" id="edit-task-working-times">
+                                        <table class="table table-striped">
+                                            <thead class="table-dark">
+                                                <th>Working Time</th>
+                                                <th>Created</th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="entry in model.editTask.workingTimes">
+                                                    <td>{{ workingTimeToHumanReadable(entry.workingTime) }}</td>
+                                                    <td>{{ entry.created }}</td>
+                                                    <td>
+                                                        <span class="bi-trash"
+                                                              v-on:click="deleteWorkingTime(entry)"></span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Description</label>
-                                        <input class="form-control" type="text" placeholder="Description"
-                                            v-model="model.editTask.description">
-                                    </div>
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Priority</label>
-                                        <select class="form-select" aria-label="Select Priority" v-model="model.editTask.priority">
-                                            <option value="1">{{ model.priorityMap[1]}}</option>
-                                            <option value="2">{{ model.priorityMap[2]}}</option>
-                                            <option value="3">{{ model.priorityMap[3]}}</option>
-                                            <option value="4">{{ model.priorityMap[4]}}</option>
-                                            <option value="5">{{ model.priorityMap[5]}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Complexity</label>
-                                        <select class="form-select" aria-label="Select Complexity" v-model="model.editTask.complexity">
-                                            <option value="1">{{ model.complexityMap[1]}}</option>
-                                            <option value="2">{{ model.complexityMap[2]}}</option>
-                                            <option value="3">{{ model.complexityMap[3]}}</option>
-                                            <option value="4">{{ model.complexityMap[4]}}</option>
-                                            <option value="5">{{ model.complexityMap[5]}}</option>
-                                        </select>
-                                    </div>
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Working Time</label>
-                                        <input class="form-control" type="text" placeholder="Working Time" v-model="model.editTask.workingTime">
-                                    </div>
-                                </form>
+                                </div>
                             </div>
+
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" v-on:click="updateTaskUI()">Update Task</button>
@@ -250,6 +319,7 @@
 
         <script src="/javascript/tasks/tasks.tools.mixin.js"></script>
         <script src="/javascript/tasks/tasks.crud.mixin.js"></script>
+        <script src="/javascript/tasks/tasks.workingtime.mixin.js"></script>
         <script src="/javascript/tasks/application.js"></script>
     </body>
 </html>
