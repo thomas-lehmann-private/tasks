@@ -31,8 +31,9 @@ const tasksManagerApp = {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
         complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
         newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [] },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTimes: [] },
-        workingTime: ''
+        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTimes: [], tags: [] },
+        workingTime: '',
+        currentTag: ''
       },
       options: { showDoneTasks: false },
       workingTimer: {
@@ -62,7 +63,6 @@ const tasksManagerApp = {
 
     updateTaskUI: function () {
       const workingTime = this.workingTimeFromHumanReadable(this.model.workingTime)
-      console.log(workingTime)
 
       if (workingTime > 0) {
         this.model.editTask.workingTimes.push({
@@ -71,7 +71,22 @@ const tasksManagerApp = {
         })
       }
 
+      console.log(JSON.stringify(this.model.editTask))
       this.updateTask(this.model.editTask)
+    },
+
+    addTag: function () {
+      if (this.model.editTask.tags.indexOf(this.model.currentTag.toLowerCase()) < 0) {
+        this.model.editTask.tags.push(this.model.currentTag.toLowerCase())
+        this.model.currentTag = ''
+      }
+    },
+
+    deleteTag: function (tag) {
+      const index = this.model.editTask.tags.indexOf(tag)
+      if (index >= 0) {
+        this.model.editTask.tags.splice(index, 1)
+      }
     },
 
     toggleWorkingTimer: function (id) {

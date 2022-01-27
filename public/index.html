@@ -104,6 +104,11 @@
                                     {{ task.title }}
                                 </div>
                                 {{ task.description }}
+                                <div class="d-flex mt-2">
+                                    <span v-for="tag in task.tags">
+                                        <span class="badge bg-dark text-white ms-1">{{ tag }}</span></span>
+                                    </span>
+                                </div>
                                 <div class="d-flex small mt-2">
                                     <div><span class="fw-bold">Created:</span><span class="fst-italic ps-2">{{ task.created }}</span></div>
                                     <div><span class="fw-bold ps-2">Changed:</span><span class="fst-italic ps-2">{{ task.changed }}</span></div>
@@ -245,6 +250,23 @@
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Working Time</label>
                                                 <input class="form-control" type="text" placeholder="Working Time" v-model="model.workingTime">
+                                            </div>
+                                            <div class="mt-2">
+                                                <label class="form-label fw-bold">Tag</label>
+                                                <div class="d-flex flex-row">
+                                                    <input class="form-control" type="text" placeholder="Description"
+                                                           v-model="model.currentTag">
+                                                    <button type="button" class="btn btn-success text-nowrap ms-2"
+                                                            v-on:click="addTag()">Add</button>
+                                                </div>
+                                                <div class="d-fley flex-row">
+                                                    <span v-for="tag in model.editTask.tags">
+                                                        <span class="badge bg-dark text-white ms-1">
+                                                            {{ tag }}
+                                                            <span class="bi-file-excel-fill ms-1" v-on:click="deleteTag(tag)"></span>
+                                                        </span>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </form>
                                     </div>

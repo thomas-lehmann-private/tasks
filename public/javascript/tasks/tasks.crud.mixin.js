@@ -33,12 +33,19 @@ const tasksCrudMixin = { // eslint-disable-line
      */
     cloneTask: function (task) {
       const workingTimes = []
+      const tags = []
 
       for (let iWorkingTime = 0; iWorkingTime < task.workingTimes.length; ++iWorkingTime) {
         workingTimes.push({
           created: task.workingTimes[iWorkingTime].created,
           workingTime: task.workingTimes[iWorkingTime].workingTime
         })
+      }
+
+      if (task.tags) {
+        for (let iTag = 0; iTag < task.tags.length; ++iTag) {
+          tags.push(task.tags[iTag])
+        }
       }
 
       return {
@@ -50,7 +57,8 @@ const tasksCrudMixin = { // eslint-disable-line
         done: task.done,
         priority: task.priority,
         complexity: task.complexity,
-        workingTimes: workingTimes
+        workingTimes: workingTimes,
+        tags: tags
       }
     },
 
