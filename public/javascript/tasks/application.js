@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin */
+/* global $ tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin */
 
 const tasksManagerApp = {
   mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin],
@@ -56,6 +56,8 @@ const tasksManagerApp = {
       // the dialog popup itself is handled via bootstrap
       this.model.editTask = this.cloneTask(task)
       this.model.workingTime = ''
+      // activate first tab
+      $('button[data-bs-target="#edit-task-main"]').click()
     },
 
     updateTaskUI: function () {

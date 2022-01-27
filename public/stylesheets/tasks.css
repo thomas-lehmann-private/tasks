@@ -1,41 +1,35 @@
-.trash-icon {
-    width: 16px;
-    height: 16px;
-    background-image: url('/icons/trash.svg');
-    background-repeat: no-repeat;
+body {
+    margin-top: 60px !important;
 }
 
-.trash-icon:hover {
-    width: 16px;
-    height: 16px;
-    background-image: url('/icons/trash-fill.svg');
-    background-repeat: no-repeat;
+/** Keeping tabs with same height -> */
+.tab-content {
+     display: flex;
 }
 
-.square-icon {
-    width: 16px;
-    height: 16px;
-    background-image: url('/icons/square.svg');
-    background-repeat: no-repeat;
+.tab-content > .tab-pane {
+    display: block;
+    visibility: hidden;
+    margin-right: -100%;
+    width: 100%;
 }
 
-.square-icon:hover {
-    width: 16px;
-    height: 16px;
-    background-image: url('/icons/square-fill.svg');
-    background-repeat: no-repeat;
+.tab-content > .active {
+    visibility: visible;
+}
+/** <- Keeping tabs with same height */
+
+.border-left {
+    border-left: 1px solid;
+    border-color: #dee2e6 #dee2e6 #fff;
 }
 
-.check-square-icon {
-    width: 16px;
-    height: 16px;
-    background-image: url('/icons/check-square.svg');
-    background-repeat: no-repeat;
+.border-right {
+    border-right: 1px solid;
+    border-color: #dee2e6 #dee2e6 #fff;
 }
 
-.check-square-icon:hover {
-    width: 16px;
-    height: 16px;
-    background-image: url('/icons/check-square-fill.svg');
-    background-repeat: no-repeat;
+.border-bottom {
+    border-right: 1px solid;
+    border-color: #dee2e6 #dee2e6 #fff;
 }
