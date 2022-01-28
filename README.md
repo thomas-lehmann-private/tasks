@@ -17,3 +17,4 @@ npm run service
 ## Links
 
  - https://github.com/tdegrunt/jsonschema
+ - https://vuejsdevelopers.com/2017/03/24/vue-js-component-templates/

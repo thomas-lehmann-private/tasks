@@ -108,4 +108,6 @@ const tasksToolsMixin = { // eslint-disable-line
   }
 }
 
-exports.tasksToolsMixin = tasksToolsMixin
+if (typeof exports !== 'undefined') {
+  exports.tasksToolsMixin = tasksToolsMixin
+}

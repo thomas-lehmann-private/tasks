@@ -21,27 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/* global $ tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin */
+
+/* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin
+   TagComponent AttributeComponent tasksEditMixin, PriorityComponent */
 
 const tasksManagerApp = {
-  mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin],
+  mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin, tasksEditMixin],
+
+  // registered components
+  components: {
+    tag: TagComponent,
+    attribute: AttributeComponent,
+    priority: PriorityComponent
+  },
+
   data: function () {
     return {
       model: {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
         complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
-        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [] },
-        editTask: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTimes: [], tags: [] },
-        workingTime: '',
-        currentTag: ''
+        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [] }
       },
       options: { showDoneTasks: false },
-      workingTimer: {
-        enabled: false,
-        start: null, // will be a valid start date
-        taskId: '', // will be set by clicking on the clock icon at a specific task
-        humanReadable: '' // will be adjusted via interval timer
-      },
       tasks: [],
       searchText: ''
     }
@@ -53,66 +54,6 @@ const tasksManagerApp = {
   },
 
   methods: {
-    editTaskUI: function (task) {
-      // the dialog popup itself is handled via bootstrap
-      this.model.editTask = this.cloneTask(task)
-      this.model.workingTime = ''
-      // activate first tab
-      $('button[data-bs-target="#edit-task-main"]').click()
-    },
-
-    updateTaskUI: function () {
-      const workingTime = this.workingTimeFromHumanReadable(this.model.workingTime)
-
-      if (workingTime > 0) {
-        this.model.editTask.workingTimes.push({
-          created: new Date(),
-          workingTime: workingTime
-        })
-      }
-
-      console.log(JSON.stringify(this.model.editTask))
-      this.updateTask(this.model.editTask)
-    },
-
-    addTag: function () {
-      if (this.model.editTask.tags.indexOf(this.model.currentTag.toLowerCase()) < 0) {
-        this.model.editTask.tags.push(this.model.currentTag.toLowerCase())
-        this.model.currentTag = ''
-      }
-    },
-
-    deleteTag: function (tag) {
-      const index = this.model.editTask.tags.indexOf(tag)
-      if (index >= 0) {
-        this.model.editTask.tags.splice(index, 1)
-      }
-    },
-
-    toggleWorkingTimer: function (id) {
-      if (this.workingTimer.enabled) {
-        this.workingTimer.enabled = false
-        // add working time to task
-        const workingTime = Math.trunc((new Date() - this.workingTimer.start) / 1000)
-        const index = this.tasks.findIndex(entry => entry.id === this.workingTimer.taskId)
-        const clonedTask = this.cloneTask(this.tasks[index])
-        clonedTask.workingTimes.push({ created: new Date(), workingTime: workingTime })
-        this.updateTask(clonedTask)
-      } else {
-        this.workingTimer = { enabled: true, start: new Date(), taskId: id, humanReadable: '' }
-
-        setInterval(() => {
-          this.workingTimer.humanReadable = this.workingTimeToHumanReadable(
-            Math.trunc((new Date() - this.workingTimer.start) / 1000))
-        }, 1000)
-      }
-    },
-
-    deleteWorkingTime: function (workingTimeEntry) {
-      const index = this.model.editTask.workingTimes.findIndex(entry =>
-        entry.workingTime === workingTimeEntry.workingTime && entry.created === workingTimeEntry.created)
-      this.model.editTask.workingTimes.splice(index, 1)
-    },
 
     sortedTasks: function () {
       return this.tasks.sort((taskA, taskB) => {

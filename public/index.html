@@ -106,15 +106,15 @@
                                 {{ task.description }}
                                 <div class="d-flex mt-2">
                                     <span v-for="tag in task.tags">
-                                        <span class="badge bg-dark text-white ms-1">{{ tag }}</span></span>
+                                        <tag>{{ tag }}</tag>
                                     </span>
                                 </div>
                                 <div class="d-flex small mt-2">
-                                    <div><span class="fw-bold">Created:</span><span class="fst-italic ps-2">{{ task.created }}</span></div>
-                                    <div><span class="fw-bold ps-2">Changed:</span><span class="fst-italic ps-2">{{ task.changed }}</span></div>
-                                    <div><span class="fw-bold ps-2">Priority:</span><span class="fst-italic ps-2">{{ model.priorityMap[task.priority] }}</span></div>
-                                    <div><span class="fw-bold ps-2">Complexity:</span><span class="fst-italic ps-2">{{ model.complexityMap[task.complexity] }}</span></div>
-                                    <div><span v-if="getWorkingTimeForTask(task) > 0" class="fw-bold ps-2">Working Time:</span><span class="fst-italic ps-2">{{ getWorkingTimeForTaskHumanReadable(task) }}</span></div>
+                                    <attribute title="Created">{{ task.created }}</attribute>
+                                    <attribute title="Changed">{{ task.changed }}</attribute>
+                                    <attribute title="Priority">{{ model.priorityMap[task.priority] }}</attribute>
+                                    <attribute title="Complexity">{{ model.complexityMap[task.complexity] }}</attribute>
+                                    <attribute v-if="getWorkingTimeForTask(task) > 0" title="Working Time">{{ getWorkingTimeForTaskHumanReadable(task) }}</attribute>
                                 </div>
                             </td>
                             <td>
@@ -158,16 +158,9 @@
                                         <input class="form-control" type="text" placeholder="Description"
                                             v-model="model.newTask.description">
                                     </div>
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Priority</label>
-                                        <select class="form-select" aria-label="Select Priority" v-model="model.newTask.priority">
-                                            <option value="1">{{ model.priorityMap[1]}}</option>
-                                            <option value="2">{{ model.priorityMap[2]}}</option>
-                                            <option value="3">{{ model.priorityMap[3]}}</option>
-                                            <option value="4">{{ model.priorityMap[4]}}</option>
-                                            <option value="5">{{ model.priorityMap[5]}}</option>
-                                        </select>
-                                    </div>
+
+                                    <priority class="mt-2" v-model="model.newTask.priority"></priority>
+
                                     <div class="mt-2">
                                         <label class="form-label fw-bold">Complexity</label>
                                         <select class="form-select" aria-label="Select Complexity" v-model="model.newTask.complexity">
@@ -216,30 +209,23 @@
                                         <form>
                                             <div>
                                                 <label class="form-label fw-bold">Id</label>
-                                                <input class="form-control" type="text" readonly placeholder="Title" v-model="model.editTask.id" autofocus>
+                                                <input class="form-control" type="text" readonly placeholder="Title" v-model="editModel.task.id" autofocus>
                                             </div>
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Title</label>
-                                                <input class="form-control" type="text" placeholder="Title" v-model="model.editTask.title" autofocus>
+                                                <input class="form-control" type="text" placeholder="Title" v-model="editModel.task.title" autofocus>
                                             </div>
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Description</label>
                                                 <input class="form-control" type="text" placeholder="Description"
-                                                    v-model="model.editTask.description">
+                                                    v-model="editModel.task.description">
                                             </div>
-                                            <div class="mt-2">
-                                                <label class="form-label fw-bold">Priority</label>
-                                                <select class="form-select" aria-label="Select Priority" v-model="model.editTask.priority">
-                                                    <option value="1">{{ model.priorityMap[1]}}</option>
-                                                    <option value="2">{{ model.priorityMap[2]}}</option>
-                                                    <option value="3">{{ model.priorityMap[3]}}</option>
-                                                    <option value="4">{{ model.priorityMap[4]}}</option>
-                                                    <option value="5">{{ model.priorityMap[5]}}</option>
-                                                </select>
-                                            </div>
+
+                                            <priority class="mt-2" v-model="editModel.task.priority"></priority>
+
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Complexity</label>
-                                                <select class="form-select" aria-label="Select Complexity" v-model="model.editTask.complexity">
+                                                <select class="form-select" aria-label="Select Complexity" v-model="editModel.task.complexity">
                                                     <option value="1">{{ model.complexityMap[1]}}</option>
                                                     <option value="2">{{ model.complexityMap[2]}}</option>
                                                     <option value="3">{{ model.complexityMap[3]}}</option>
@@ -249,18 +235,18 @@
                                             </div>
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Working Time</label>
-                                                <input class="form-control" type="text" placeholder="Working Time" v-model="model.workingTime">
+                                                <input class="form-control" type="text" placeholder="Working Time" v-model="editModel.workingTime">
                                             </div>
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Tag</label>
                                                 <div class="d-flex flex-row">
                                                     <input class="form-control" type="text" placeholder="Description"
-                                                           v-model="model.currentTag">
+                                                           v-model="editModel.currentTag">
                                                     <button type="button" class="btn btn-success text-nowrap ms-2"
                                                             v-on:click="addTag()">Add</button>
                                                 </div>
                                                 <div class="d-fley flex-row">
-                                                    <span v-for="tag in model.editTask.tags">
+                                                    <span v-for="tag in editModel.task.tags">
                                                         <span class="badge bg-dark text-white ms-1">
                                                             {{ tag }}
                                                             <span class="bi-file-excel-fill ms-1" v-on:click="deleteTag(tag)"></span>
@@ -279,7 +265,7 @@
                                                 <th></th>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="entry in model.editTask.workingTimes">
+                                                <tr v-for="entry in editModel.task.workingTimes">
                                                     <td>{{ workingTimeToHumanReadable(entry.workingTime) }}</td>
                                                     <td>{{ entry.created }}</td>
                                                     <td>
@@ -307,9 +293,18 @@
             </div>
         </div>
 
+        <!-- Mixin's -->
         <script src="/javascript/tasks/tasks.tools.mixin.js"></script>
         <script src="/javascript/tasks/tasks.crud.mixin.js"></script>
         <script src="/javascript/tasks/tasks.workingtime.mixin.js"></script>
+        <script src="/javascript/tasks/tasks.edit.mixin.js"></script>
+
+        <!-- Component's -->
+        <script src="/javascript/tasks/components/tag.js"></script>
+        <script src="/javascript/tasks/components/attribute.js"></script>
+        <script src="/javascript/tasks/components/priority.js"></script>
+
+        <!-- Application -->
         <script src="/javascript/tasks/application.js"></script>
     </body>
 </html>

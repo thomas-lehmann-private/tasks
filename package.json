@@ -5,8 +5,8 @@
   "main": "application.js",
   "scripts": {
     "dist": "pkg src/application.js --out-path dist",
-    "lint": "npx standard",
-    "lint-fix": "npx standard --fix",
+    "lint": "npx standard --ext js --ext vue",
+    "lint-fix": "npx standard --fix --ext js --ext vue",
     "test": "npx standard && c8 --check-coverage --reporter text --reporter html --reporter cobertura mocha",
     "service": "node src/application.js",
     "build": "npm install && npm run test && npm run dist",
