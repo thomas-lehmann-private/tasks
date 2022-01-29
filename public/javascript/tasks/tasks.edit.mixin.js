@@ -132,5 +132,19 @@ const tasksEditMixin = { // eslint-disable-line
         entry.workingTime === workingTimeEntry.workingTime && entry.created === workingTimeEntry.created)
       this.editModel.task.workingTimes.splice(index, 1)
     }
+  },
+
+  computed: {
+    getAllTags: function () {
+      const allTags = new Set()
+      for (let iTask = 0; iTask < this.tasks.length; ++iTask) {
+        if (this.tasks[iTask].tags) {
+          for (let iTag = 0; iTag < this.tasks[iTask].tags.length; ++iTag) {
+            allTags.add(this.tasks[iTask].tags[iTag])
+          }
+        }
+      }
+      return allTags
+    }
   }
 }

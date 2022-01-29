@@ -241,9 +241,12 @@
                                                 <label class="form-label fw-bold">Tag</label>
                                                 <div class="d-flex flex-row">
                                                     <input class="form-control" type="text" placeholder="Description"
-                                                           v-model="editModel.currentTag">
+                                                           v-model="editModel.currentTag" list="all-tags">
                                                     <button type="button" class="btn btn-success text-nowrap ms-2"
                                                             v-on:click="addTag()">Add</button>
+                                                    <datalist id="all-tags">
+                                                        <option v-for="tag in getAllTags" v-bind:value="tag">
+                                                    </datalist>
                                                 </div>
                                                 <div class="d-fley flex-row">
                                                     <span v-for="tag in editModel.task.tags">
