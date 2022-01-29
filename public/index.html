@@ -106,7 +106,7 @@
                                 {{ task.description }}
                                 <div class="d-flex mt-2">
                                     <span v-for="tag in task.tags">
-                                        <tag>{{ tag }}</tag>
+                                        <tag v-on:click="searchText='tag:' + tag">{{ tag }}</tag>
                                     </span>
                                 </div>
                                 <div class="d-flex small mt-2">

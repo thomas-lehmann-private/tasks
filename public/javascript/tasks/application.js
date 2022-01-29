@@ -59,8 +59,7 @@ const tasksManagerApp = {
 
     if (localStorage.showDoneTasks) {
       console.log('"' + localStorage.showDoneTasks + '"')
-      this.options.showDoneTasks = Boolean(localStorage.showDoneTasks)
-      console.log('created: adjust show done tasks to ' + this.options.showDoneTasks)
+      this.options.showDoneTasks = (localStorage.showDoneTasks === 'true')
     }
   },
 
@@ -71,7 +70,6 @@ const tasksManagerApp = {
 
     'options.showDoneTasks': function (newValue) {
       localStorage.showDoneTasks = newValue ? 'true' : 'false'
-      console.log('Change show done tasks to ' + localStorage.showDoneTasks)
     }
   },
 
@@ -103,6 +101,12 @@ const tasksManagerApp = {
 
         if (!this.options.showDoneTasks && task.done) {
           return false
+        }
+
+        const match = theSearchText.match(/tag:(.*)/)
+        if (match !== null) {
+          const tag = match[1]
+          return task.tags && task.tags.indexOf(tag) >= 0
         }
 
         if (task.title.toLowerCase().indexOf(theSearchText) >= 0) {
