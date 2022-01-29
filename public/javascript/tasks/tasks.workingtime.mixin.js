@@ -32,9 +32,7 @@ const tasksWorkingTimeMixin = { // eslint-disable-line
     getWorkingTimeForTask: function (task) {
       let sumWorkingTime = 0
       for (let iWorkingTime = 0; iWorkingTime < task.workingTimes.length; ++iWorkingTime) {
-        if (this.isToday(new Date(task.workingTimes[iWorkingTime].created))) {
-          sumWorkingTime += task.workingTimes[iWorkingTime].workingTime
-        }
+        sumWorkingTime += task.workingTimes[iWorkingTime].workingTime
       }
       return sumWorkingTime
     },

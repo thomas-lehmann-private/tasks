@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/* global $ */
+/* global $ localStorage */
 
 const tasksEditMixin = { // eslint-disable-line
   data: function () {
@@ -32,11 +32,33 @@ const tasksEditMixin = { // eslint-disable-line
         currentTag: ''
       },
       workingTimer: {
-        enabled: false,
+        enabled: false, // when true the working time is active
         start: null, // will be a valid start date
         taskId: '', // will be set by clicking on the clock icon at a specific task
         humanReadable: '' // will be adjusted via interval timer
       }
+    }
+  },
+
+  created: function () {
+    if (localStorage.workingTimer) {
+      this.workingTimer = JSON.parse(localStorage.workingTimer)
+      // date is serialized as string and won't be a date when deserialized
+      this.workingTimer.start = new Date(this.workingTimer.start)
+
+      if (this.workingTimer.enabled) {
+        const self = this
+        setInterval(() => {
+          self.workingTimer.humanReadable = self.workingTimeToHumanReadable(
+            Math.trunc((new Date() - self.workingTimer.start) / 1000))
+        }, 1000)
+      }
+    }
+  },
+
+  watch: {
+    workingTimer (newValue) {
+      localStorage.workingTimer = JSON.stringify(newValue)
     }
   },
 
@@ -85,19 +107,22 @@ const tasksEditMixin = { // eslint-disable-line
 
     toggleWorkingTimer: function (id) {
       if (this.workingTimer.enabled) {
-        this.workingTimer.enabled = false
         // add working time to task
         const workingTime = Math.trunc((new Date() - this.workingTimer.start) / 1000)
         const index = this.tasks.findIndex(entry => entry.id === this.workingTimer.taskId)
         const clonedTask = this.cloneTask(this.tasks[index])
         clonedTask.workingTimes.push({ created: new Date(), workingTime: workingTime })
         this.updateTask(clonedTask)
+
+        // disable it
+        this.workingTimer = { enabled: false, start: new Date(), taskId: id, humanReadable: '' }
       } else {
         this.workingTimer = { enabled: true, start: new Date(), taskId: id, humanReadable: '' }
 
+        const self = this
         setInterval(() => {
-          this.workingTimer.humanReadable = this.workingTimeToHumanReadable(
-            Math.trunc((new Date() - this.workingTimer.start) / 1000))
+          self.workingTimer.humanReadable = self.workingTimeToHumanReadable(
+            Math.trunc((new Date() - self.workingTimer.start) / 1000))
         }, 1000)
       }
     },

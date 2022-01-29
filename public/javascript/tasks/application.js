@@ -23,7 +23,8 @@
  */
 
 /* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin
-   TagComponent AttributeComponent tasksEditMixin, PriorityComponent */
+   TagComponent AttributeComponent tasksEditMixin, PriorityComponent
+   localStorage */
 
 const tasksManagerApp = {
   mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin, tasksEditMixin],
@@ -51,6 +52,27 @@ const tasksManagerApp = {
   created: function () {
     // get all tasks from the REST service
     this.getTasks()
+
+    if (localStorage.searchText) {
+      this.searchText = localStorage.searchText
+    }
+
+    if (localStorage.showDoneTasks) {
+      console.log('"' + localStorage.showDoneTasks + '"')
+      this.options.showDoneTasks = Boolean(localStorage.showDoneTasks)
+      console.log('created: adjust show done tasks to ' + this.options.showDoneTasks)
+    }
+  },
+
+  watch: {
+    searchText: function (newValue) {
+      localStorage.searchText = newValue
+    },
+
+    'options.showDoneTasks': function (newValue) {
+      localStorage.showDoneTasks = newValue ? 'true' : 'false'
+      console.log('Change show done tasks to ' + localStorage.showDoneTasks)
+    }
   },
 
   methods: {

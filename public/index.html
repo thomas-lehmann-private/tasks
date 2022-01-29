@@ -98,7 +98,7 @@
                         <tr v-for="task in filteredTasks">
                             <td v-bind:class="{'text-decoration-line-through': task.done}">
                                 <div class="fs-4">
-                                    <span v-if="workingTimer.enabled && workingTimer.taskId === task.id"
+                                        <span v-if="workingTimer.enabled && workingTimer.taskId === task.id"
                                     class="ms-1 bi-clock"
                                     ></span>
                                     {{ task.title }}

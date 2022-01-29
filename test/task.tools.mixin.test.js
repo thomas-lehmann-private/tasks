@@ -27,7 +27,7 @@ const assert = require('assert')
 const { tasksToolsMixin } = require('../public/javascript/tasks/tasks.tools.mixin')
 
 describe('test task tools mixin', () => {
-  it('test convertion from human readable seconds', () => {
+  it('convertion from human readable seconds', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('1s'), 1)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('10s'), 10)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('59s'), 59)
@@ -35,7 +35,7 @@ describe('test task tools mixin', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('60s'), undefined)
   })
 
-  it('test convertion from human readable minutes', () => {
+  it('convertion from human readable minutes', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('1m'), 60)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('10m'), 10 * 60)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('59m'), 59 * 60)
@@ -43,7 +43,7 @@ describe('test task tools mixin', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('60m'), undefined)
   })
 
-  it('test convertion from human readable hours', () => {
+  it('convertion from human readable hours', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('1h'), 60 * 60)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('10h'), 10 * 60 * 60)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('23h'), 23 * 60 * 60)
@@ -51,12 +51,12 @@ describe('test task tools mixin', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('24h'), undefined)
   })
 
-  it('test convertion from human readable days', () => {
+  it('convertion from human readable days', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('1d'), 24 * 60 * 60)
     assert.equal(tasksToolsMixin.methods.workingTimeFromHumanReadable('10d'), 10 * 24 * 60 * 60)
   })
 
-  it('test convertion to human readable', () => {
+  it('convertion to human readable', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeToHumanReadable(1), '1s')
     assert.equal(tasksToolsMixin.methods.workingTimeToHumanReadable(59), '59s')
     assert.equal(tasksToolsMixin.methods.workingTimeToHumanReadable(60), '1m')
@@ -70,13 +70,13 @@ describe('test task tools mixin', () => {
     assert.equal(tasksToolsMixin.methods.workingTimeToHumanReadable(60 * 60 * 24 + 60 * 60 + 61), '1d1h1m1s')
   })
 
-  it('test compareNumbers', () => {
+  it('compareNumbers', () => {
     assert.equal(tasksToolsMixin.methods.compareNumbers(1, 2), -1)
     assert.equal(tasksToolsMixin.methods.compareNumbers(2, 1), +1)
     assert.equal(tasksToolsMixin.methods.compareNumbers(2, 2), 0)
   })
 
-  it('test isToday', () => {
+  it('isToday', () => {
     const now = new Date()
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
