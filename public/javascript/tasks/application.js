@@ -24,7 +24,7 @@
 
 /* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin
    TagComponent AttributeComponent tasksEditMixin, PriorityComponent
-   localStorage */
+   localStorage ComplexityComponent */
 
 const tasksManagerApp = {
   mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin, tasksEditMixin],
@@ -33,7 +33,8 @@ const tasksManagerApp = {
   components: {
     tag: TagComponent,
     attribute: AttributeComponent,
-    priority: PriorityComponent
+    priority: PriorityComponent,
+    complexity: ComplexityComponent
   },
 
   data: function () {
@@ -58,7 +59,6 @@ const tasksManagerApp = {
     }
 
     if (localStorage.showDoneTasks) {
-      console.log('"' + localStorage.showDoneTasks + '"')
       this.options.showDoneTasks = (localStorage.showDoneTasks === 'true')
     }
   },

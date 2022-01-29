@@ -9,7 +9,7 @@
     "lint-fix": "npx standard --fix --ext js --ext vue",
     "test": "npx standard && c8 --check-coverage --reporter text --reporter html --reporter cobertura mocha",
     "service": "node src/application.js",
-    "build": "npm install && npm run test && npm run dist",
+    "build": "npm install && npm run test",
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf coverage"
   },
   "author": "Thomas Lehmann",
@@ -25,7 +25,6 @@
   "devDependencies": {
     "c8": "^7.11.0",
     "mocha": "^9.1.4",
-    "pkg": "^4.4.9",
     "standard": "^16.0.4",
     "supertest": "^6.2.1"
   }

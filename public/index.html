@@ -160,17 +160,7 @@
                                     </div>
 
                                     <priority class="mt-2" v-model="model.newTask.priority"></priority>
-
-                                    <div class="mt-2">
-                                        <label class="form-label fw-bold">Complexity</label>
-                                        <select class="form-select" aria-label="Select Complexity" v-model="model.newTask.complexity">
-                                            <option value="1">{{ model.complexityMap[1]}}</option>
-                                            <option value="2">{{ model.complexityMap[2]}}</option>
-                                            <option value="3">{{ model.complexityMap[3]}}</option>
-                                            <option value="4">{{ model.complexityMap[4]}}</option>
-                                            <option value="5">{{ model.complexityMap[5]}}</option>
-                                        </select>
-                                    </div>
+                                    <complexity class="mt-2" v-model="model.newTask.complexity"></complexity>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -222,21 +212,13 @@
                                             </div>
 
                                             <priority class="mt-2" v-model="editModel.task.priority"></priority>
+                                            <complexity class="mt-2" v-model="editModel.task.complexity"></complexity>
 
-                                            <div class="mt-2">
-                                                <label class="form-label fw-bold">Complexity</label>
-                                                <select class="form-select" aria-label="Select Complexity" v-model="editModel.task.complexity">
-                                                    <option value="1">{{ model.complexityMap[1]}}</option>
-                                                    <option value="2">{{ model.complexityMap[2]}}</option>
-                                                    <option value="3">{{ model.complexityMap[3]}}</option>
-                                                    <option value="4">{{ model.complexityMap[4]}}</option>
-                                                    <option value="5">{{ model.complexityMap[5]}}</option>
-                                                </select>
-                                            </div>
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Working Time</label>
                                                 <input class="form-control" type="text" placeholder="Working Time" v-model="editModel.workingTime">
                                             </div>
+
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Tag</label>
                                                 <div class="d-flex flex-row">
@@ -306,6 +288,7 @@
         <script src="/javascript/tasks/components/tag.js"></script>
         <script src="/javascript/tasks/components/attribute.js"></script>
         <script src="/javascript/tasks/components/priority.js"></script>
+        <script src="/javascript/tasks/components/complexity.js"></script>
 
         <!-- Application -->
         <script src="/javascript/tasks/application.js"></script>

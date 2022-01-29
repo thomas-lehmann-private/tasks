@@ -64,6 +64,33 @@
                 "type": "string",
                 "minLength": 2
             }
+        },
+        "subtasks": {
+            "type": "array",
+            "items": {
+                "properties": {
+                    "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "required": true
+                    },
+                    "changed": {
+                        "type": "string",
+                        "format": "date-time",
+                        "required": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "minLength": 10,
+                        "required": true
+                    },
+                    "done": {
+                        "type": "bool",
+                        "required": true
+                    }
+                },
+                "additionalProperties": false
+            }
         }
     },
     "additionalProperties": false

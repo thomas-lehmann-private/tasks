@@ -34,6 +34,7 @@ const tasksCrudMixin = { // eslint-disable-line
     cloneTask: function (task) {
       const workingTimes = []
       const tags = []
+      const subtasks = []
 
       for (let iWorkingTime = 0; iWorkingTime < task.workingTimes.length; ++iWorkingTime) {
         workingTimes.push({
@@ -48,6 +49,17 @@ const tasksCrudMixin = { // eslint-disable-line
         }
       }
 
+      if (task.subtasks) {
+        for (let iSubTask = 0; iSubTask < task.subtasks.length; ++iSubTask) {
+          subtasks.push({
+            created: task.subtasks[iSubTask].created,
+            changed: task.subtasks[iSubTask].changed,
+            title: task.subtasks[iSubTask].title,
+            done: task.subtasks[iSubTask].done
+          })
+        }
+      }
+
       return {
         id: task.id,
         title: task.title,
@@ -58,7 +70,8 @@ const tasksCrudMixin = { // eslint-disable-line
         priority: task.priority,
         complexity: task.complexity,
         workingTimes: workingTimes,
-        tags: tags
+        tags: tags,
+        subtasks: subtasks
       }
     },
 
