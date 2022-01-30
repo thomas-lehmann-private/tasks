@@ -36,6 +36,9 @@ const tasksEditMixin = { // eslint-disable-line
         start: null, // will be a valid start date
         taskId: '', // will be set by clicking on the clock icon at a specific task
         humanReadable: '' // will be adjusted via interval timer
+      },
+      deleteModel: {
+        task: { task: { id: '', title: '' } }
       }
     }
   },
@@ -81,8 +84,12 @@ const tasksEditMixin = { // eslint-disable-line
         })
       }
 
-      console.log(JSON.stringify(this.editModel.task))
       this.updateTask(this.editModel.task)
+    },
+
+    deleteTaskUI: function (id) {
+      const index = this.tasks.findIndex(task => task.id === id)
+      this.deleteModel.task = this.tasks[index]
     },
 
     /**

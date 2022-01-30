@@ -24,7 +24,7 @@
 const { describe, it } = require('mocha')
 const assert = require('assert')
 
-const { tasksToolsMixin } = require('../public/javascript/tasks/tasks.tools.mixin')
+const { tasksToolsMixin } = require('../public/javascript/tasks/mixins/tasks.tools.mixin')
 
 describe('test task tools mixin', () => {
   it('convertion from human readable seconds', () => {

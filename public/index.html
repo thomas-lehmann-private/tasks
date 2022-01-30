@@ -132,7 +132,8 @@
                                         v-on:click="editTaskUI(task)"></span>
                                     <span class="ms-1 bi-trash"
                                         v-bind:title="'Löschen der Task: ' + task.title"
-                                        v-on:click="deleteTask(task.id)"></span>
+                                        data-bs-toggle="modal" data-bs-target="#delete-task-dialog"
+                                        v-on:click="deleteTaskUI(task.id)"></span>
                                 </div>
                             </td>
                         </tr>
@@ -276,13 +277,32 @@
                     </div>
                 </div>
             </div>
-        </div>
 
+            <!-- Delete task dialog for asking user -->
+            <div id="delete-task-dialog" class="modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Delete Task</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete '<span class="fw-bold">{{ deleteModel.task.title }}</span>'</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="deleteTask(deleteModel.task.id)">Yes</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
         <!-- Mixin's -->
-        <script src="/javascript/tasks/tasks.tools.mixin.js"></script>
-        <script src="/javascript/tasks/tasks.crud.mixin.js"></script>
-        <script src="/javascript/tasks/tasks.workingtime.mixin.js"></script>
-        <script src="/javascript/tasks/tasks.edit.mixin.js"></script>
+        <script src="/javascript/tasks/mixins/tasks.tools.mixin.js"></script>
+        <script src="/javascript/tasks/mixins/tasks.crud.mixin.js"></script>
+        <script src="/javascript/tasks/mixins/tasks.workingtime.mixin.js"></script>
+        <script src="/javascript/tasks/mixins/tasks.edit.mixin.js"></script>
 
         <!-- Component's -->
         <script src="/javascript/tasks/components/tag.js"></script>
