@@ -24,7 +24,7 @@
 
 /* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin
    TagComponent AttributeComponent tasksEditMixin, PriorityComponent
-   localStorage ComplexityComponent */
+   localStorage ComplexityComponent YesNoDialogComponent */
 
 const tasksManagerApp = {
   mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin, tasksEditMixin],
@@ -34,7 +34,8 @@ const tasksManagerApp = {
     tag: TagComponent,
     attribute: AttributeComponent,
     priority: PriorityComponent,
-    complexity: ComplexityComponent
+    complexity: ComplexityComponent,
+    yesNoDialog: YesNoDialogComponent
   },
 
   data: function () {
@@ -81,7 +82,7 @@ const tasksManagerApp = {
       if (task.done) {
         percentage = 100.0
       } else {
-        if (task.subtasks) {
+        if (task.subtasks && task.subtasks.length > 0) {
           const doneTasks = task.subtasks.filter(entry => entry.done)
           percentage = doneTasks.length * 100.0 / task.subtasks.length
         }
