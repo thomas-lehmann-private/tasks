@@ -75,6 +75,21 @@ const tasksManagerApp = {
 
   methods: {
 
+    percentageDone: function (task) {
+      let percentage = 0.0
+
+      if (task.done) {
+        percentage = 100.0
+      } else {
+        if (task.subtasks) {
+          const doneTasks = task.subtasks.filter(entry => entry.done)
+          percentage = doneTasks.length * 100.0 / task.subtasks.length
+        }
+      }
+
+      return percentage
+    },
+
     sortedTasks: function () {
       return this.tasks.sort((taskA, taskB) => {
         if (taskA.done && !taskB.done) {

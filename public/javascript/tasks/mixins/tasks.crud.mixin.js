@@ -130,11 +130,35 @@ const tasksCrudMixin = { // eslint-disable-line
     /**
      * Toogle done state of task (finally an 'updateTask' call).
      *
-     * @param {*} task the task to change done state for.
+     * @param {object} task the task to change done state for.
      */
     toggleDone: function (task) {
       const clonedTask = this.cloneTask(task)
       clonedTask.done = !clonedTask.done
+      this.updateTask(clonedTask)
+    },
+
+    /**
+     * Toogle done state of subtask (finally an 'updateTask' call).
+     *
+     * @param {object} task the task containing the relating subtask.
+     * @param {int} index the index of the subtask
+     */
+    toggleSubtaskDone: function (task, index) {
+      const clonedTask = this.cloneTask(task)
+      clonedTask.subtasks[index].done = !clonedTask.subtasks[index].done
+      this.updateTask(clonedTask)
+    },
+
+    /**
+     * Delete subtask (finally an 'updateTask' call).
+     *
+     * @param {object} task the task containing the relating subtask.
+     * @param {int} index the index of the subtask
+     */
+    deleteSubtask: function (task, index) {
+      const clonedTask = this.cloneTask(task)
+      clonedTask.subtasks.splice(index, 1)
       this.updateTask(clonedTask)
     },
 

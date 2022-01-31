@@ -104,6 +104,40 @@
                                     {{ task.title }}
                                 </div>
                                 {{ task.description }}
+                                <table v-if="task.subtasks && task.subtasks.length > 0" class="table table-sm table-striped">
+                                    <thead class="table-dark small">
+                                        <tr>
+                                            <th>Subtasks</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(subtask, index) in task.subtasks">
+                                            <td class="ps-3 small" v-bind:class="{'text-decoration-line-through': subtask.done}">
+                                                {{ subtask.title }}
+                                                <div class="d-flex small mt-2">
+                                                    <attribute title="Created">{{ subtask.created }}</attribute>
+                                                    <attribute title="Changed">{{ subtask.changed }}</attribute>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex float-end">
+                                                    <span class="" v-bind:class="{'bi-square': !subtask.done, 'bi-check-square': subtask.done}"
+                                                          v-bind:title="'Toggle done state for: ' + subtask.title"
+                                                          v-on:click="toggleSubtaskDone(task, index)"></span>
+                                                    <span class="ms-1 bi-pencil"
+                                                          v-bind:title="'Edit subtask for: ' + subtask.title"
+                                                          data-bs-toggle="modal" data-bs-target="#subtask-dialog"
+                                                          v-on:click="editSubtaskUI(task, index)"></span>
+                                                    <span class="ms-1 bi-trash"
+                                                          v-bind:title="'Löschen der Subtask: ' + subtask.title"
+                                                          data-bs-toggle="modal" data-bs-target="#delete-subtask-dialog"
+                                                          v-on:click="deleteSubtaskUI(task, index)"></span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                                 <div class="d-flex mt-2">
                                     <span v-for="tag in task.tags">
                                         <tag v-on:click="searchText='tag:' + tag">{{ tag }}</tag>
@@ -115,25 +149,30 @@
                                     <attribute title="Priority">{{ model.priorityMap[task.priority] }}</attribute>
                                     <attribute title="Complexity">{{ model.complexityMap[task.complexity] }}</attribute>
                                     <attribute v-if="getWorkingTimeForTask(task) > 0" title="Working Time">{{ getWorkingTimeForTaskHumanReadable(task) }}</attribute>
+                                    <attribute title="Done">{{ percentageDone(task) }}%</attribute>
                                 </div>
                             </td>
                             <td>
-                                <div class="d-flex">
+                                <div class="d-flex float-end">
+                                    <span class="ms-1 bi-plus-circle"
+                                          data-bs-toggle="modal" data-bs-target="#subtask-dialog"
+                                          v-bind:title="'Adding subtask for: ' + task.title"
+                                          v-on:click="addSubtaskUI(task)"></span>
                                     <span class="ms-1" v-bind:class="{'bi-square': !task.done, 'bi-check-square': task.done}"
-                                        v-bind:title="'Toggle done state for: ' + task.title"
-                                        v-on:click="toggleDone(task)"></span>
+                                          v-bind:title="'Toggle done state for: ' + task.title"
+                                          v-on:click="toggleDone(task)"></span>
                                     <span v-if="!workingTimer.enabled"
-                                        class="ms-1 bi-clock"
-                                        v-bind:title="'Activate working timer for: ' + task.title"
-                                        v-on:click="toggleWorkingTimer(task.id)"></span>
+                                          class="ms-1 bi-clock"
+                                          v-bind:title="'Activate working timer for: ' + task.title"
+                                          v-on:click="toggleWorkingTimer(task.id)"></span>
                                     <span class="ms-1 bi-pencil"
-                                        v-bind:title="'Edit task for: ' + task.title"
-                                        data-bs-toggle="modal" data-bs-target="#edit-task-dialog"
-                                        v-on:click="editTaskUI(task)"></span>
+                                          v-bind:title="'Edit task for: ' + task.title"
+                                          data-bs-toggle="modal" data-bs-target="#edit-task-dialog"
+                                          v-on:click="editTaskUI(task)"></span>
                                     <span class="ms-1 bi-trash"
-                                        v-bind:title="'Löschen der Task: ' + task.title"
-                                        data-bs-toggle="modal" data-bs-target="#delete-task-dialog"
-                                        v-on:click="deleteTaskUI(task.id)"></span>
+                                          v-bind:title="'Löschen der Task: ' + task.title"
+                                          data-bs-toggle="modal" data-bs-target="#delete-task-dialog"
+                                          v-on:click="deleteTaskUI(task.id)"></span>
                                 </div>
                             </td>
                         </tr>
@@ -278,11 +317,40 @@
                 </div>
             </div>
 
+            <!-- Add subtask task dialog for asking user -->
+            <div id="subtask-dialog" class="modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header text-white bg-dark">
+                            <h5 v-if="editModel.subtask.index &gt;= 0" class="modal-title">Edit Subtask</h5>
+                            <h5 v-if="editModel.subtask.index &lt; 0" class="modal-title">Add Subtask</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div>
+                                    <label class="form-label fw-bold">Id</label>
+                                    <input class="form-control" type="text" readonly placeholder="Id" v-model="editModel.task.id" autofocus>
+                                </div>
+                                <div class="mt-2">
+                                    <label class="form-label fw-bold">Title</label>
+                                    <input class="form-control" type="text" placeholder="Title" v-model="editModel.subtask.title" autofocus>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="updateTaskUI()">Update Task</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Delete task dialog for asking user -->
             <div id="delete-task-dialog" class="modal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header text-white bg-dark">
                             <h5 class="modal-title">Delete Task</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -291,6 +359,25 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="deleteTask(deleteModel.task.id)">Yes</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete subtask dialog for asking user -->
+            <div id="delete-subtask-dialog" class="modal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header text-white bg-dark">
+                            <h5 class="modal-title">Delete Subtask</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Do you really want to delete '<span class="fw-bold">{{ deleteModel.subtask.title }}</span>'</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="deleteSubtask(deleteModel.task, deleteModel.subtask.index)">Yes</button>
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
                         </div>
                     </div>

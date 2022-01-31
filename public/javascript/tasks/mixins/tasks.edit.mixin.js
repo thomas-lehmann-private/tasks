@@ -28,6 +28,7 @@ const tasksEditMixin = { // eslint-disable-line
     return {
       editModel: {
         task: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTimes: [], tags: [] },
+        subtask: { title: '', index: -1 },
         workingTime: '',
         currentTag: ''
       },
@@ -38,7 +39,8 @@ const tasksEditMixin = { // eslint-disable-line
         humanReadable: '' // will be adjusted via interval timer
       },
       deleteModel: {
-        task: { task: { id: '', title: '' } }
+        task: { task: { id: '', title: '' } },
+        subtask: { title: '', index: -1 }
       }
     }
   },
@@ -74,16 +76,55 @@ const tasksEditMixin = { // eslint-disable-line
       $('button[data-bs-target="#edit-task-main"]').click()
     },
 
+    addSubtaskUI: function (task) {
+      // the dialog popup itself is handled via bootstrap
+      this.editModel.task = this.cloneTask(task)
+      this.editModel.subtask = { title: '', index: -1 }
+      this.editModel.workingTime = ''
+    },
+
+    editSubtaskUI: function (task, index) {
+      // the dialog popup itself is handled via bootstrap
+      this.editModel.task = this.cloneTask(task)
+      this.editModel.subtask = { title: task.subtasks[index].title, index: index }
+      this.editModel.workingTime = ''
+    },
+
+    deleteSubtaskUI: function (task, index) {
+      // the dialog popup itself is handled via bootstrap
+      this.deleteModel.task = this.cloneTask(task)
+      this.deleteModel.subtask = { title: task.subtasks[index].title, index: index }
+    },
+
     updateTaskUI: function () {
       const workingTime = this.workingTimeFromHumanReadable(this.editModel.workingTime)
+      const now = new Date()
 
       if (workingTime > 0) {
         this.editModel.task.workingTimes.push({
-          created: new Date(),
+          created: now,
           workingTime: workingTime
         })
       }
 
+      if (this.editModel.subtask.title.length > 0) {
+        if (this.editModel.subtask.index < 0) {
+          if (!this.editModel.task.subtasks) {
+            this.editModel.task.subtasks = []
+          }
+
+          this.editModel.task.subtasks.push({
+            title: this.editModel.subtask.title,
+            created: now,
+            changed: now,
+            done: false
+          })
+        } else {
+          this.editModel.task.subtasks[this.editModel.subtask.index].title = this.editModel.subtask.title
+          this.editModel.task.subtasks[this.editModel.subtask.index].changed = now
+        }
+        this.editModel.subtask = { title: '', index: -1 }
+      }
       this.updateTask(this.editModel.task)
     },
 
