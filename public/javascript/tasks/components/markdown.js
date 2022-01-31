@@ -22,14 +22,12 @@
  * THE SOFTWARE.
  */
 
-const AttributeComponent = { // eslint-disable-line
-  props: ['title'],
-  template: `
-    <div class="ms-2">
-      <span class="fw-bold">{{ title }}:</span>
-      <span class="fst-italic ps-2">
-        <slot></slot>
-      </span>
-    </div>
-  `
+/* global Vue showdown */
+
+const MarkdownComponent = { // eslint-disable-line
+  props: ['text'],
+  render: function () {
+    const converter = new showdown.Converter()
+    return Vue.h({ template: converter.makeHtml(this.text) })
+  }
 }

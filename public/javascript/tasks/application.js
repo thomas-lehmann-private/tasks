@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Thomas Lehmann.
+ * Copyright 2022 Thomas Lehmann.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@
 
 /* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin
    TagComponent AttributeComponent tasksEditMixin, PriorityComponent
-   localStorage ComplexityComponent YesNoDialogComponent */
+   localStorage ComplexityComponent YesNoDialogComponent MarkdownComponent */
 
 const tasksManagerApp = {
   mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin, tasksEditMixin],
@@ -35,7 +35,8 @@ const tasksManagerApp = {
     attribute: AttributeComponent,
     priority: PriorityComponent,
     complexity: ComplexityComponent,
-    yesNoDialog: YesNoDialogComponent
+    yesNoDialog: YesNoDialogComponent,
+    markdown: MarkdownComponent
   },
 
   data: function () {

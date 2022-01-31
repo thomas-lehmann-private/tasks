@@ -12,6 +12,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/vue@next"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
     </head>
 
     <body>
@@ -98,9 +99,8 @@
                         <tr v-for="task in filteredTasks">
                             <td v-bind:class="{'text-decoration-line-through': task.done}">
                                 <div class="fs-4">
-                                        <span v-if="workingTimer.enabled && workingTimer.taskId === task.id"
-                                    class="ms-1 bi-clock"
-                                    ></span>
+                                    <span v-if="workingTimer.enabled && workingTimer.taskId === task.id"
+                                          class="ms-1 bi-clock"></span>
                                     {{ task.title }}
                                 </div>
                                 {{ task.description }}
@@ -114,7 +114,7 @@
                                     <tbody>
                                         <tr v-for="(subtask, index) in task.subtasks">
                                             <td class="ps-3 small" v-bind:class="{'text-decoration-line-through': subtask.done}">
-                                                {{ subtask.title }}
+                                                <markdown v-bind:text="subtask.title"></markdown>
                                                 <div class="d-flex small mt-2">
                                                     <attribute title="Created">{{ subtask.created }}</attribute>
                                                     <attribute title="Changed">{{ subtask.changed }}</attribute>
@@ -371,6 +371,7 @@
         <script src="/javascript/tasks/components/priority.js"></script>
         <script src="/javascript/tasks/components/complexity.js"></script>
         <script src="/javascript/tasks/components/yesnodialog.js"></script>
+        <script src="/javascript/tasks/components/markdown.js"></script>
 
         <!-- Application -->
         <script src="/javascript/tasks/application.js"></script>
