@@ -29,19 +29,45 @@
                     <tbody>
                         <tr>
                             <td>All tasks</td>
-                            <td>{{ tasks.length }}</td>
+                            <td>
+                                <a class="float-end" v-on:click="options.showDoneTasks=true; customFilter=getAllTasks">
+                                    {{ tasks.length }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Not done tasks</td>
+                            <td>
+                                <a class="float-end" v-on:click="options.showDoneTasks=false; customFilter=getNotDoneTasks">
+                                    {{ getNotDoneTasks(tasks).length }}</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Done tasks</td>
-                            <td>{{ tasks.filter(task => task.done).length }}</td>
+                            <td>
+                                <a class="float-end" v-on:click="options.showDoneTasks=true; customFilter=getDoneTasks">
+                                    {{ getDoneTasks(tasks).length }}</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Filtered tasks</td>
-                            <td>{{ filteredTasks.length }}</td>
+                            <td>
+                                <span class="float-end">
+                                    {{ filteredTasks.length }}</span>
+                            </td>
                         </tr>
                         <tr v-if="getWorkingTimeForTodayHumanReadable(tasks) !== ''">
                             <td>Working Time for today</td>
-                            <td>{{ getWorkingTimeForTodayHumanReadable(tasks) }}</td>
+                            <td>
+                                <a class="float-end">
+                                    {{ getWorkingTimeForTodayHumanReadable(tasks) }}</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Created Today</td>
+                            <td class=>
+                                <a class="float-end" v-on:click="customFilter=getTasksCreatedToday">
+                                    {{ getTasksCreatedToday(this.tasks).length }}</a>
+                            </td>
                         </tr>
                     </table>
                 </table>
@@ -364,6 +390,7 @@
         <script src="/javascript/tasks/mixins/tasks.crud.mixin.js"></script>
         <script src="/javascript/tasks/mixins/tasks.workingtime.mixin.js"></script>
         <script src="/javascript/tasks/mixins/tasks.edit.mixin.js"></script>
+        <script src="/javascript/tasks/mixins/tasks.filter.mixin.js"></script>
 
         <!-- Component's -->
         <script src="/javascript/tasks/components/tag.js"></script>

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-const tasksToolsMixin = { // eslint-disable-line
+const TasksToolsMixin = { // eslint-disable-line
   methods: {
     /**
      * Compare two numbers.
@@ -109,5 +109,5 @@ const tasksToolsMixin = { // eslint-disable-line
 }
 
 if (typeof exports !== 'undefined') {
-  exports.tasksToolsMixin = tasksToolsMixin
+  exports.TasksToolsMixin = TasksToolsMixin
 }

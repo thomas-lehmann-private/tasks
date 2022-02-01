@@ -23,7 +23,7 @@
  */
 /* global $ */
 
-const tasksCrudMixin = { // eslint-disable-line
+const TasksCrudMixin = { // eslint-disable-line
   methods: {
     /**
      * Cloning a task.

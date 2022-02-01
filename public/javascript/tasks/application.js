@@ -22,12 +22,15 @@
  * THE SOFTWARE.
  */
 
-/* global tasksCrudMixin tasksToolsMixin tasksWorkingTimeMixin
-   TagComponent AttributeComponent tasksEditMixin, PriorityComponent
-   localStorage ComplexityComponent YesNoDialogComponent MarkdownComponent */
+/* global TasksCrudMixin TasksToolsMixin TasksWorkingTimeMixin
+   TagComponent AttributeComponent TasksEditMixin PriorityComponent
+   localStorage ComplexityComponent YesNoDialogComponent MarkdownComponent
+   TasksFilterMixin */
 
-const tasksManagerApp = {
-  mixins: [tasksToolsMixin, tasksCrudMixin, tasksWorkingTimeMixin, tasksEditMixin],
+const TasksManagerApp = {
+  // registered mixins
+  mixins: [TasksToolsMixin, TasksCrudMixin, TasksWorkingTimeMixin,
+    TasksEditMixin, TasksFilterMixin],
 
   // registered components
   components: {
@@ -48,7 +51,8 @@ const tasksManagerApp = {
       },
       options: { showDoneTasks: false },
       tasks: [],
-      searchText: ''
+      searchText: '',
+      customFilter: (tasks) => tasks
     }
   },
 
@@ -89,7 +93,7 @@ const tasksManagerApp = {
         }
       }
 
-      return percentage
+      return Number(percentage).toFixed(1)
     },
 
     sortedTasks: function () {
@@ -113,31 +117,10 @@ const tasksManagerApp = {
 
   computed: {
     filteredTasks: function () {
-      return this.sortedTasks().filter(task => {
-        const theSearchText = this.searchText.toLowerCase()
-
-        if (!this.options.showDoneTasks && task.done) {
-          return false
-        }
-
-        const match = theSearchText.match(/tag:(.*)/)
-        if (match !== null) {
-          const tag = match[1]
-          return task.tags && task.tags.indexOf(tag) >= 0
-        }
-
-        if (task.title.toLowerCase().indexOf(theSearchText) >= 0) {
-          return true
-        }
-        if (task.description.toLowerCase().indexOf(theSearchText) >= 0) {
-          return true
-        }
-
-        return false
-      })
+      return this.customFilter(this.getFilteredTasks(this.sortedTasks()))
     }
   }
 }
 
-const app = Vue.createApp(tasksManagerApp) // eslint-disable-line
+const app = Vue.createApp(TasksManagerApp) // eslint-disable-line
 app.mount('#application')

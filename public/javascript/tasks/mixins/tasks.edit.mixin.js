@@ -23,7 +23,7 @@
  */
 /* global $ localStorage */
 
-const tasksEditMixin = { // eslint-disable-line
+const TasksEditMixin = { // eslint-disable-line
   data: function () {
     return {
       editModel: {
