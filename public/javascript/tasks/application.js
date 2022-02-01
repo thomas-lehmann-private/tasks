@@ -52,7 +52,7 @@ const TasksManagerApp = {
       options: { showDoneTasks: false },
       tasks: [],
       searchText: '',
-      customFilter: (tasks) => tasks
+      customFilter: this.getNotDoneTasks
     }
   },
 

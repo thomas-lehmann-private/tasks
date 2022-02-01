@@ -93,6 +93,20 @@ const TasksFilterMixin = { // eslint-disable-line
      */
     getNotDoneTasks: function (tasks) {
       return tasks.filter(task => !task.done)
+    },
+
+    getCustomFilterName: function (customFilter) {
+      if (customFilter === this.getNotDoneTasks) {
+        return 'Not Done'
+      } else if (customFilter === this.getDoneTasks) {
+        return 'Done'
+      } else if (customFilter === this.getTasksCreatedToday) {
+        return 'Created Today'
+      } else if (customFilter === this.getAllTasks) {
+        return 'All'
+      }
+
+      return 'unknown'
     }
   }
 }
