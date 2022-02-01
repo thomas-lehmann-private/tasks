@@ -23,6 +23,13 @@
  */
 
 const TasksFilterMixin = { // eslint-disable-line
+  data: function () {
+    return {
+      searchText: '',
+      customFilter: this.getNotDoneTasks
+    }
+  },
+
   methods: {
     /*
      * Default filter that does always apply.

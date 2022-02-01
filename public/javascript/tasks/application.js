@@ -50,9 +50,7 @@ const TasksManagerApp = {
         newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [] }
       },
       options: { showDoneTasks: false },
-      tasks: [],
-      searchText: '',
-      customFilter: this.getNotDoneTasks
+      tasks: []
     }
   },
 

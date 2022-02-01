@@ -113,6 +113,7 @@
                     </div>
                 </nav>
 
+                <!-- Table with tasks -->
                 <table class="table table-striped">
                     <thead class="table-dark">
                         <tr>
@@ -124,12 +125,17 @@
                     <tbody>
                         <tr v-for="task in filteredTasks">
                             <td v-bind:class="{'text-decoration-line-through': task.done}">
+                                <!-- Title -->
                                 <div class="fs-4">
                                     <span v-if="workingTimer.enabled && workingTimer.taskId === task.id"
                                           class="ms-1 bi-clock"></span>
                                     {{ task.title }}
                                 </div>
+
+                                <!-- Description -->
                                 {{ task.description }}
+
+                                <!-- Subtasks -->
                                 <table v-if="task.subtasks && task.subtasks.length > 0" class="mt-2 table table-sm table-striped">
                                     <thead class="table-dark small">
                                         <tr>
@@ -164,11 +170,15 @@
                                         </tr>
                                     </tbody>
                                 </table>
+
+                                <!-- Tags -->
                                 <div class="d-flex mt-2">
-                                    <span v-for="tag in task.tags">
+                                    <span v-for="tag in task.tags.sort()">
                                         <tag v-on:click="searchText='tag:' + tag">{{ tag }}</tag>
                                     </span>
                                 </div>
+
+                                <!-- Attributes -->
                                 <div class="d-flex small mt-2">
                                     <attribute title="Created">{{ task.created }}</attribute>
                                     <attribute title="Changed">{{ task.changed }}</attribute>
@@ -178,6 +188,8 @@
                                     <attribute title="Done">{{ percentageDone(task) }}%</attribute>
                                 </div>
                             </td>
+
+                            <!-- Actions -->
                             <td>
                                 <div class="d-flex float-end">
                                     <span class="ms-1 bi-plus-circle"
@@ -293,7 +305,7 @@
                                                     <button type="button" class="btn btn-success text-nowrap ms-2"
                                                             v-on:click="addTag()">Add</button>
                                                     <datalist id="all-tags">
-                                                        <option v-for="tag in getAllTags" v-bind:value="tag">
+                                                        <option v-for="tag in getAllTags.filter(entry => editModel.task.tags.indexOf(entry) &lt; 0)" v-bind:value="tag">
                                                     </datalist>
                                                 </div>
                                                 <div class="d-fley flex-row">
