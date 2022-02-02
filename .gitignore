@@ -5,3 +5,4 @@ tasks.log
 application-linux
 application-macos
 application-win.exe
+public/about.json

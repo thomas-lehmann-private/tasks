@@ -25,7 +25,7 @@
 /* global TasksCrudMixin TasksToolsMixin TasksWorkingTimeMixin
    TagComponent AttributeComponent TasksEditMixin PriorityComponent
    localStorage ComplexityComponent YesNoDialogComponent MarkdownComponent
-   TasksFilterMixin */
+   TasksFilterMixin EditableTagsComponent */
 
 const TasksManagerApp = {
   // registered mixins
@@ -39,7 +39,8 @@ const TasksManagerApp = {
     priority: PriorityComponent,
     complexity: ComplexityComponent,
     yesNoDialog: YesNoDialogComponent,
-    markdown: MarkdownComponent
+    markdown: MarkdownComponent,
+    editableTags: EditableTagsComponent
   },
 
   data: function () {
@@ -47,7 +48,7 @@ const TasksManagerApp = {
       model: {
         priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
         complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
-        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [] }
+        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [], tags: [] }
       },
       options: { showDoneTasks: false },
       tasks: []

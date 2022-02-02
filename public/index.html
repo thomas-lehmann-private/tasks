@@ -241,6 +241,11 @@
 
                                     <priority class="mt-2" v-model="model.newTask.priority"></priority>
                                     <complexity class="mt-2" v-model="model.newTask.complexity"></complexity>
+
+                                    <editable-tags class="mt-2"
+                                                   v-bind:task="model.newTask"
+                                                   v-bind:tags="getAllTags.filter(entry => model.newTask.tags.indexOf(entry) &lt; 0).sort()">
+                                    </editable-tags>
                                 </form>
                             </div>
                             <div class="modal-footer">
@@ -299,26 +304,10 @@
                                                 <input class="form-control" type="text" placeholder="Working Time" v-model="editModel.workingTime">
                                             </div>
 
-                                            <div class="mt-2">
-                                                <label class="form-label fw-bold">Tag</label>
-                                                <div class="d-flex flex-row">
-                                                    <input class="form-control" type="text" placeholder="Enter a tag"
-                                                           v-model="editModel.currentTag" list="all-tags">
-                                                    <button type="button" class="btn btn-success text-nowrap ms-2"
-                                                            v-on:click="addTag()">Add</button>
-                                                    <datalist id="all-tags">
-                                                        <option v-for="tag in getAllTags.filter(entry => editModel.task.tags.indexOf(entry) &lt; 0)" v-bind:value="tag">
-                                                    </datalist>
-                                                </div>
-                                                <div class="d-fley flex-row">
-                                                    <span v-for="tag in editModel.task.tags">
-                                                        <span class="badge bg-dark text-white ms-1">
-                                                            {{ tag }}
-                                                            <span class="bi-file-excel-fill ms-1" v-on:click="deleteTag(tag)"></span>
-                                                        </span>
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            <editable-tags class="mt-2"
+                                                           v-bind:task="editModel.task"
+                                                           v-bind:tags="getAllTags.filter(entry => editModel.task.tags.indexOf(entry) &lt; 0).sort()">
+                                            </editable-tags>
                                         </form>
                                     </div>
 
@@ -413,6 +402,7 @@
         <script src="/javascript/tasks/components/complexity.js"></script>
         <script src="/javascript/tasks/components/yesnodialog.js"></script>
         <script src="/javascript/tasks/components/markdown.js"></script>
+        <script src="/javascript/tasks/components/editableTags.js"></script>
 
         <!-- Application -->
         <script src="/javascript/tasks/application.js"></script>

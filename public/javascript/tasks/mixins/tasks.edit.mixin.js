@@ -133,36 +133,6 @@ const TasksEditMixin = { // eslint-disable-line
       this.deleteModel.task = this.tasks[index]
     },
 
-    /**
-     * Adding a tag while being in the edit dialog.
-     */
-    addTag: function () {
-      const currentTag = this.editModel.currentTag.toLowerCase()
-
-      if (this.editModel.task.tags.indexOf(currentTag) < 0) {
-        // you cannot add 'bug' when 'feature' is already present and vice versa
-        if (currentTag === 'bug' && this.editModel.task.tags.indexOf('feature') < 0) {
-          this.editModel.task.tags.push(currentTag)
-        } else if (currentTag === 'feature' && this.editModel.task.tags.indexOf('bug') < 0) {
-          this.editModel.task.tags.push(currentTag)
-        } else if (currentTag !== 'bug' && currentTag !== 'feature') {
-          this.editModel.task.tags.push(currentTag)
-        }
-
-        this.editModel.currentTag = ''
-      }
-    },
-
-    /**
-     * Deleting a tag while being in the edit dialog.
-     */
-    deleteTag: function (tag) {
-      const index = this.editModel.task.tags.indexOf(tag)
-      if (index >= 0) {
-        this.editModel.task.tags.splice(index, 1)
-      }
-    },
-
     toggleWorkingTimer: function (id) {
       if (this.workingTimer.enabled) {
         // add working time to task

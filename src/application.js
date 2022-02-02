@@ -60,6 +60,13 @@ app.get('/schema', function (request, response) {
   response.send(schema.SCHEMA)
 })
 
+// providing about details.
+app.get('/about', function (request, response) {
+  const content = fs.readFileSync('public/about.json')
+  response.set('content-type', 'application/json')
+  response.send(content)
+})
+
 // creating or updating a task object.
 app.post('/task', tasks.post)
 // get one task by id or all tasks

@@ -9,11 +9,15 @@
     "lint-fix": "npx standard --fix --ext js --ext vue",
     "test": "npx standard && c8 --check-coverage --reporter text --reporter html --reporter cobertura mocha",
     "service": "node src/application.js",
-    "build": "npm install && npm run test",
+    "build": "npm install && node generate-about.js && npm run test",
     "clean": "rm -rf dist && rm -rf node_modules && rm -rf coverage"
   },
   "author": "Thomas Lehmann",
   "license": "MIT",
+   "repository": {
+    "type": "git",
+    "url": "https://github.com/thomas-lehmann-private/tasks.git"
+  },
   "dependencies": {
     "express": "^4.17.2",
     "jsonschema": "^1.4.0",
