@@ -117,6 +117,7 @@
                 <table class="table table-striped">
                     <thead class="table-dark">
                         <tr>
+                            <th></th>
                             <th>Tasks <span class="small">(Filter: {{ getCustomFilterName(customFilter) }})</span></th>
                             <th></th>
                         </tr>
@@ -124,6 +125,7 @@
 
                     <tbody>
                         <tr v-for="task in filteredTasks">
+                            <td v-bind:class="getTaskColor(task)"></td>
                             <td v-bind:class="{'text-decoration-line-through': task.done}">
                                 <!-- Title -->
                                 <div class="fs-4">
@@ -135,7 +137,7 @@
                                 <!-- Description -->
                                 {{ task.description }}
 
-                                <!-- Subtasks -->
+                                <!-- Subtasks (optional) -->
                                 <table v-if="task.subtasks && task.subtasks.length > 0" class="mt-2 table table-sm table-striped">
                                     <thead class="table-dark small">
                                         <tr>
@@ -171,8 +173,8 @@
                                     </tbody>
                                 </table>
 
-                                <!-- Tags -->
-                                <div class="d-flex mt-2">
+                                <!-- Tags (optional) -->
+                                <div v-if="task.tags" class="d-flex mt-2">
                                     <span v-for="tag in task.tags.sort()">
                                         <tag v-on:click="searchText='tag:' + tag">{{ tag }}</tag>
                                     </span>
@@ -300,7 +302,7 @@
                                             <div class="mt-2">
                                                 <label class="form-label fw-bold">Tag</label>
                                                 <div class="d-flex flex-row">
-                                                    <input class="form-control" type="text" placeholder="Description"
+                                                    <input class="form-control" type="text" placeholder="Enter a tag"
                                                            v-model="editModel.currentTag" list="all-tags">
                                                     <button type="button" class="btn btn-success text-nowrap ms-2"
                                                             v-on:click="addTag()">Add</button>

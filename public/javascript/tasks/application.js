@@ -110,6 +110,23 @@ const TasksManagerApp = {
 
         return diff
       })
+    },
+
+    /**
+     * Get color for task depending on tags.
+     * @param {object} task the task with eventually containing tags.
+     * @returns color for task as a class.
+     */
+    getTaskColor: function (task) {
+      if (task.tags) {
+        if (task.tags.indexOf('feature') >= 0) {
+          return 'bg-success'
+        } else if (task.tags.indexOf('bug') >= 0) {
+          return 'bg-danger'
+        }
+
+        return 'bg-light'
+      }
     }
   },
 

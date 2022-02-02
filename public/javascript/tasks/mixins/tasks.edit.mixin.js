@@ -137,8 +137,18 @@ const TasksEditMixin = { // eslint-disable-line
      * Adding a tag while being in the edit dialog.
      */
     addTag: function () {
-      if (this.editModel.task.tags.indexOf(this.editModel.currentTag.toLowerCase()) < 0) {
-        this.editModel.task.tags.push(this.editModel.currentTag.toLowerCase())
+      const currentTag = this.editModel.currentTag.toLowerCase()
+
+      if (this.editModel.task.tags.indexOf(currentTag) < 0) {
+        // you cannot add 'bug' when 'feature' is already present and vice versa
+        if (currentTag === 'bug' && this.editModel.task.tags.indexOf('feature') < 0) {
+          this.editModel.task.tags.push(currentTag)
+        } else if (currentTag === 'feature' && this.editModel.task.tags.indexOf('bug') < 0) {
+          this.editModel.task.tags.push(currentTag)
+        } else if (currentTag !== 'bug' && currentTag !== 'feature') {
+          this.editModel.task.tags.push(currentTag)
+        }
+
         this.editModel.currentTag = ''
       }
     },
