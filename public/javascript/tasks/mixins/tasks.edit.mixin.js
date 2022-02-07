@@ -41,6 +41,11 @@ const TasksEditMixin = { // eslint-disable-line
       deleteModel: {
         task: { task: { id: '', title: '' } },
         subtask: { title: '', index: -1 }
+      },
+      about: {
+        repository: {
+          url: ''
+        }
       }
     }
   },
@@ -68,6 +73,22 @@ const TasksEditMixin = { // eslint-disable-line
   },
 
   methods: {
+    createTaskUI: function () {
+      // the dialog popup itself is handled via bootstrap
+      this.task = {
+        id: '',
+        title: '',
+        description: '',
+        done: false,
+        created: null,
+        changed: null,
+        priority: 3,
+        complexity: 3,
+        workingTimes: [],
+        tags: []
+      }
+    },
+
     editTaskUI: function (task) {
       // the dialog popup itself is handled via bootstrap
       this.editModel.task = this.cloneTask(task)

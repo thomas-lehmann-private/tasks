@@ -33,3 +33,7 @@ body {
     border-right: 1px solid;
     border-color: #dee2e6 #dee2e6 #fff;
 }
+
+.small-75 {
+    font-size: 75%;
+}

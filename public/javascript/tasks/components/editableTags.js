@@ -32,21 +32,20 @@ const EditableTagsComponent = { // eslint-disable-line
     /**
      * Adding a tag while being in the edit dialog.
      */
-    addTag: function (task, tag) {
-      const currentTag = tag
-
-      if (task.tags.indexOf(currentTag) < 0) {
-        // you cannot add 'bug' when 'feature' is already present and vice versa
-        if (currentTag === 'bug' && task.tags.indexOf('feature') < 0) {
-          task.tags.push(currentTag)
-        } else if (currentTag === 'feature' && task.tags.indexOf('bug') < 0) {
-          task.tags.push(currentTag)
-        } else if (currentTag !== 'bug' && currentTag !== 'feature') {
-          task.tags.push(currentTag)
+    addTag: function (task) {
+      if (this.currentTag.trim().length > 0) {
+        if (task.tags.indexOf(this.currentTag) < 0) {
+          // you cannot add 'bug' when 'feature' is already present and vice versa
+          if (this.currentTag === 'bug' && task.tags.indexOf('feature') < 0) {
+            task.tags.push(this.currentTag)
+          } else if (this.currentTag === 'feature' && task.tags.indexOf('bug') < 0) {
+            task.tags.push(this.currentTag)
+          } else if (this.currentTag !== 'bug' && this.currentTag !== 'feature') {
+            task.tags.push(this.currentTag)
+          }
         }
-
-        this.currentTag = ''
       }
+      this.currentTag = ''
     },
 
     /**
@@ -67,9 +66,9 @@ const EditableTagsComponent = { // eslint-disable-line
             <input class="form-control" type="text" placeholder="Enter a tag"
                    v-model="currentTag" list="all-tags">
             <button type="button" class="btn btn-success text-nowrap ms-2"
-                    v-on:click="addTag(task, currentTag)">Add</button>
+                    v-on:click="addTag(task)">Add</button>
             <datalist id="all-tags">
-                <option v-for="tag in tags" v-bind:value="tag">
+                <option v-for="tag in tags" v-bind:value="tag"></option>
             </datalist>
         </div>
 

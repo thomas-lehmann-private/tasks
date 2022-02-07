@@ -76,7 +76,10 @@
             <div class="flex-grow-1 ms-1 me-1">
                 <nav class="navbar fixed-top navbar-dark bg-dark d-print-none">
                     <div class="container-fluid">
-                        <span class="navbar-brand mb-0 h1">Simple Tasks Manager</span>
+                        <span class="navbar-brand mb-0 h1">
+                            Simple Tasks Manager
+                            <span class="small-75">(v{{ about.version }})</span>
+                        </span>
 
                         <form class="d-flex">
                             <!-- Display working time button which allows to stop it and the duration -->
@@ -85,30 +88,37 @@
                                 Working timer enabled: {{ workingTimer.humanReadable }}
                             </button>
 
-                            <!-- Options dropdown -->
-                            <div class="dropdown text-white bg-dark">
-                                <button class="btn dropdown-toggle text-white bg-dark" type="button" id="xdropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Options
-                                </button>
-                                <ul class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton1">
-                                    <li>
-                                        <button class="dropdown-item text-white" type="button" v-on:click="options.showDoneTasks = !options.showDoneTasks">
-                                            <span v-bind:class="{'bi-square': !options.showDoneTasks, 'bi-check-square': options.showDoneTasks}"></span>
-                                            Show done tasks
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
                             <!-- Button to create a new task -->
                             <button class="btn btn-success ms-2 text-nowrap" type="button"
-                                    data-bs-toggle="modal" data-bs-target="#new-task-dialog">
+                                    data-bs-toggle="modal" data-bs-target="#new-task-dialog"
+                                    v-on:click="createTaskUI()">
                                     Create Task</button>
 
                             <!-- Input for searching and filtering tasks -->
                             <input class="form-control ms-2"
                                 type="search" placeholder="Search" aria-label="Search"
                                 v-model="searchText">
+
+                            <!-- Help dropdown -->
+                            <div class="dropdown text-white bg-dark">
+                                <button class="btn dropdown-toggle text-white bg-dark" type="button" data-bs-toggle="dropdown">
+                                Help
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-lg-end bg-dark">
+                                    <li>
+                                        <a class="dropdown-item text-white" 
+                                           v-bind:href="about.repository.url" target="_blank">Project Home</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-white" 
+                                           href="/task" target="_blank">Tasks As JSON Data</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-white" 
+                                           href="/schema" target="_blank">JSON Schema For Tasks Data</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </form>
                     </div>
                 </nav>

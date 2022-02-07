@@ -22,10 +22,14 @@
  * THE SOFTWARE.
  */
 
-/* global TasksCrudMixin TasksToolsMixin TasksWorkingTimeMixin
+/* global $ TasksCrudMixin TasksToolsMixin TasksWorkingTimeMixin
    TagComponent AttributeComponent TasksEditMixin PriorityComponent
    localStorage ComplexityComponent YesNoDialogComponent MarkdownComponent
    TasksFilterMixin EditableTagsComponent */
+
+$(document).on('shown.bs.modal', '.modal', function () {
+  $(this).find('[autofocus]').focus()
+})
 
 const TasksManagerApp = {
   // registered mixins
@@ -50,31 +54,23 @@ const TasksManagerApp = {
         complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
         newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [], tags: [] }
       },
-      options: { showDoneTasks: false },
-      tasks: []
+      options: { showDoneTasks: false }
     }
   },
 
   created: function () {
     // get all tasks from the REST service
     this.getTasks()
+    this.getAbout()
 
     if (localStorage.searchText) {
       this.searchText = localStorage.searchText
-    }
-
-    if (localStorage.showDoneTasks) {
-      this.options.showDoneTasks = (localStorage.showDoneTasks === 'true')
     }
   },
 
   watch: {
     searchText: function (newValue) {
       localStorage.searchText = newValue
-    },
-
-    'options.showDoneTasks': function (newValue) {
-      localStorage.showDoneTasks = newValue ? 'true' : 'false'
     }
   },
 

@@ -24,6 +24,13 @@
 /* global $ */
 
 const TasksCrudMixin = { // eslint-disable-line
+  data: function () {
+    return {
+      tasks: [],
+      about: {}
+    }
+  },
+
   methods: {
     /**
      * Cloning a task.
@@ -169,6 +176,16 @@ const TasksCrudMixin = { // eslint-disable-line
       const self = this
       $.getJSON('/task', function (data) {
         self.tasks = data
+      })
+    },
+
+    /**
+     * Get (read) about details from the REST service.
+     */
+    getAbout: function () {
+      const self = this
+      $.getJSON('/about', function (data) {
+        self.about = data
       })
     }
   }
