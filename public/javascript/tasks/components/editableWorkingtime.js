@@ -22,29 +22,15 @@
  * THE SOFTWARE.
  */
 
-const YesNoDialogComponent = { // eslint-disable-line
-  props: ['id', 'title'],
-  emits: ['clickedYes', 'clickedNo', 'clickedCancel'],
+const EditableWorkingtimeComponent = { // eslint-disable-line
+  props: ['modelValue'],
+  emits: ['update:modelValue'],
   template: `
-    <div v-bind:id="id" class="modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header text-white bg-dark">
-                    <h5 class="modal-title">{{ title }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            v-on:click="$emit('clickedCancel')"></button>
-                </div>
-                <div class="modal-body">
-                    <slot></slot>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" 
-                            v-on:click="$emit('clickedYes')">Yes</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            v-on:click="$emit('clickedNo')">No</button>
-                </div>
-            </div>
-        </div>
+    <div>
+        <label class="form-label fw-bold">Working Time</label>
+        <input class="form-control" type="text" placeholder="Enter Working Time"
+               v-bind:value="modelValue"
+               v-on:input="$emit('update:modelValue', $event.target.value)">
     </div>
-    `
+  `
 }

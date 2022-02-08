@@ -50,6 +50,7 @@ Validator.prototype.customFormats.uuid = function (input) {
 function validate (object) {
   const validator = new Validator()
   const result = validator.validate(object, SCHEMA)
+  console.log(result)
   return result.errors.length === 0
 }
 

@@ -26,21 +26,11 @@
 const TasksEditMixin = { // eslint-disable-line
   data: function () {
     return {
-      editModel: {
-        task: { id: '', title: '', description: '', done: false, created: null, changed: null, priority: 3, complexity: 3, workingTimes: [], tags: [] },
-        subtask: { title: '', index: -1 },
-        workingTime: '',
-        currentTag: ''
-      },
       workingTimer: {
         enabled: false, // when true the working time is active
         start: null, // will be a valid start date
         taskId: '', // will be set by clicking on the clock icon at a specific task
         humanReadable: '' // will be adjusted via interval timer
-      },
-      deleteModel: {
-        task: { task: { id: '', title: '' } },
-        subtask: { title: '', index: -1 }
       },
       about: {
         repository: {
@@ -73,15 +63,22 @@ const TasksEditMixin = { // eslint-disable-line
   },
 
   methods: {
+    // because the one dialog can handle both it is decided by a given id.
+    createOrUpdateTask: function () {
+      if (this.model.task.id.length > 0) {
+        this.updateTaskUI(this.model)
+      } else {
+        this.addTaskUI(this.model)
+      }
+    },
+
     createTaskUI: function () {
       // the dialog popup itself is handled via bootstrap
-      this.task = {
+      this.model.task = {
         id: '',
         title: '',
         description: '',
         done: false,
-        created: null,
-        changed: null,
         priority: 3,
         complexity: 3,
         workingTimes: [],
@@ -91,67 +88,73 @@ const TasksEditMixin = { // eslint-disable-line
 
     editTaskUI: function (task) {
       // the dialog popup itself is handled via bootstrap
-      this.editModel.task = this.cloneTask(task)
-      this.editModel.workingTime = ''
+      this.model.task = this.cloneTask(task)
+      this.model.workingTime = ''
+
       // activate first tab
-      $('button[data-bs-target="#edit-task-main"]').click()
+      $('button[data-bs-target="#task-main"]').click()
+    },
+
+    addTaskUI: function (model) {
+      this.addTask(model.task)
     },
 
     addSubtaskUI: function (task) {
       // the dialog popup itself is handled via bootstrap
-      this.editModel.task = this.cloneTask(task)
-      this.editModel.subtask = { title: '', index: -1 }
-      this.editModel.workingTime = ''
+      this.model.task = this.cloneTask(task)
+      this.model.subtask = { title: '', index: -1 }
+      this.model.workingTime = ''
     },
 
     editSubtaskUI: function (task, index) {
       // the dialog popup itself is handled via bootstrap
-      this.editModel.task = this.cloneTask(task)
-      this.editModel.subtask = { title: task.subtasks[index].title, index: index }
-      this.editModel.workingTime = ''
+      this.model.task = this.cloneTask(task)
+      this.model.subtask = { title: task.subtasks[index].title, index: index }
+      this.model.workingTime = ''
     },
 
     deleteSubtaskUI: function (task, index) {
       // the dialog popup itself is handled via bootstrap
-      this.deleteModel.task = this.cloneTask(task)
-      this.deleteModel.subtask = { title: task.subtasks[index].title, index: index }
+      this.model.task = this.cloneTask(task)
+      this.model.subtask = { title: task.subtasks[index].title, index: index }
     },
 
-    updateTaskUI: function () {
-      const workingTime = this.workingTimeFromHumanReadable(this.editModel.workingTime)
+    updateTaskUI: function (model) {
+      const workingTime = this.workingTimeFromHumanReadable(model.workingTime)
       const now = new Date()
 
       if (workingTime > 0) {
-        this.editModel.task.workingTimes.push({
+        model.task.workingTimes.push({
           created: now,
           workingTime: workingTime
         })
       }
 
-      if (this.editModel.subtask.title.length > 0) {
-        if (this.editModel.subtask.index < 0) {
-          if (!this.editModel.task.subtasks) {
-            this.editModel.task.subtasks = []
+      if (model.subtask.title.length > 0) {
+        if (model.subtask.index < 0) {
+          if (!model.task.subtasks) {
+            model.task.subtasks = []
           }
 
-          this.editModel.task.subtasks.push({
-            title: this.editModel.subtask.title,
+          model.task.subtasks.push({
+            title: model.subtask.title,
             created: now,
             changed: now,
             done: false
           })
         } else {
-          this.editModel.task.subtasks[this.editModel.subtask.index].title = this.editModel.subtask.title
-          this.editModel.task.subtasks[this.editModel.subtask.index].changed = now
+          model.task.subtasks[model.subtask.index].title = model.subtask.title
+          model.task.subtasks[model.subtask.index].changed = now
         }
-        this.editModel.subtask = { title: '', index: -1 }
+        model.subtask = { title: '', index: -1 }
       }
-      this.updateTask(this.editModel.task)
+
+      this.updateTask(model.task)
     },
 
     deleteTaskUI: function (id) {
       const index = this.tasks.findIndex(task => task.id === id)
-      this.deleteModel.task = this.tasks[index]
+      this.model.task = this.tasks[index]
     },
 
     toggleWorkingTimer: function (id) {
@@ -174,12 +177,6 @@ const TasksEditMixin = { // eslint-disable-line
             Math.trunc((new Date() - self.workingTimer.start) / 1000))
         }, 1000)
       }
-    },
-
-    deleteWorkingTime: function (workingTimeEntry) {
-      const index = this.editModel.task.workingTimes.findIndex(entry =>
-        entry.workingTime === workingTimeEntry.workingTime && entry.created === workingTimeEntry.created)
-      this.editModel.task.workingTimes.splice(index, 1)
     }
   },
 

@@ -30,21 +30,21 @@
                         <tr>
                             <td>All</td>
                             <td>
-                                <a class="float-end" v-on:click="options.showDoneTasks=true; customFilter=getAllTasks">
+                                <a class="float-end" v-on:click="customFilter=getAllTasks">
                                     {{ tasks.length }}</a>
                             </td>
                         </tr>
                         <tr>
                             <td>Not Done</td>
                             <td>
-                                <a class="float-end" v-on:click="options.showDoneTasks=false; customFilter=getNotDoneTasks">
+                                <a class="float-end" v-on:click="customFilter=getNotDoneTasks">
                                     {{ getNotDoneTasks(tasks).length }}</a>
                             </td>
                         </tr>
                         <tr>
                             <td>Done</td>
                             <td>
-                                <a class="float-end" v-on:click="options.showDoneTasks=true; customFilter=getDoneTasks">
+                                <a class="float-end" v-on:click="customFilter=getDoneTasks">
                                     {{ getDoneTasks(tasks).length }}</a>
                             </td>
                         </tr>
@@ -90,7 +90,7 @@
 
                             <!-- Button to create a new task -->
                             <button class="btn btn-success ms-2 text-nowrap" type="button"
-                                    data-bs-toggle="modal" data-bs-target="#new-task-dialog"
+                                    data-bs-toggle="modal" data-bs-target="#task-dialog"
                                     v-on:click="createTaskUI()">
                                     Create Task</button>
 
@@ -217,7 +217,7 @@
                                           v-on:click="toggleWorkingTimer(task.id)"></span>
                                     <span class="ms-1 bi-pencil"
                                           v-bind:title="'Edit task for: ' + task.title"
-                                          data-bs-toggle="modal" data-bs-target="#edit-task-dialog"
+                                          data-bs-toggle="modal" data-bs-target="#task-dialog"
                                           v-on:click="editTaskUI(task)"></span>
                                     <span class="ms-1 bi-trash"
                                           v-bind:title="'Löschen der Task: ' + task.title"
@@ -229,176 +229,59 @@
                     </tbody>
                 </table>
 
-                <!-- Dialog for defining a new task -->
-                <div id="new-task-dialog" class="modal fade" data-bs-backdrop="static">
-                    <div class="modal-dialog modal-dialog-centered">
+                <!-- new task dialog -->
+                <task-dialog id="task-dialog"
+                             v-model:model="model"
+                             v-bind:tags="getAllTags"
+                             v-on:clicked-save="createOrUpdateTask">
+                </task-dialog>
+
+
+                <!-- Add subtask task dialog for asking user -->
+                <div id="subtask-dialog" class="modal" tabindex="-1">
+                    <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header text-white bg-dark">
-                                <h5 class="modal-title">Create Task Dialog</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <h5 v-if="model.subtask.index &gt;= 0" class="modal-title">Edit Subtask</h5>
+                                <h5 v-if="model.subtask.index &lt; 0" class="modal-title">Add Subtask</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <form>
                                     <div>
-                                        <label class="form-label fw-bold">Title</label>
-                                        <input class="form-control" type="text" placeholder="Title" v-model="model.newTask.title" autofocus>
+                                        <label class="form-label fw-bold">Id</label>
+                                        <input class="form-control" type="text" readonly placeholder="Id" v-model="model.task.id" autofocus>
                                     </div>
                                     <div class="mt-2">
-                                        <label class="form-label fw-bold">Description</label>
-                                        <input class="form-control" type="text" placeholder="Description"
-                                            v-model="model.newTask.description">
+                                        <label class="form-label fw-bold">Title</label>
+                                        <input class="form-control" type="text" placeholder="Title" v-model="model.subtask.title" autofocus>
                                     </div>
-
-                                    <priority class="mt-2" v-model="model.newTask.priority"></priority>
-                                    <complexity class="mt-2" v-model="model.newTask.complexity"></complexity>
-
-                                    <editable-tags class="mt-2"
-                                                   v-bind:task="model.newTask"
-                                                   v-bind:tags="getAllTags.filter(entry => model.newTask.tags.indexOf(entry) &lt; 0).sort()">
-                                    </editable-tags>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary"
-                                        data-bs-dismiss="modal" v-on:click="addTask()">Create Task</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="updateTaskUI(model)">Update Task</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Dialog for editing a given task -->
-                <div id="edit-task-dialog" class="modal fade" data-bs-backdrop="static">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                            <div class="modal-header text-white bg-dark">
-                                <h5 class="modal-title">Edit Task Dialog</h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
+                <!-- Delete task dialog for asking user -->
+                <yes-no-dialog id="delete-task-dialog" title="Delete Task"
+                            v-on:clicked-yes="deleteTask(model.task.id)">
+                    <p>Do you really want to delete '<span class="fw-bold">{{ model.task.title }}</span>'</p>
+                </yes-no-dialog>
 
-                            <div class="modal-body">
-                                <ul class="nav nav-tabs">
-                                    <li class="nav-item">
-                                        <button class="nav-link active" type="button"
-                                                data-bs-toggle="tab" data-bs-target="#edit-task-main">Main</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button class="nav-link" type="button"
-                                                data-bs-toggle="tab" data-bs-target="#edit-task-working-times">Working Times</button>
-                                    </li>
-                                </ul>
-
-                                <div class="tab-content">
-                                    <div class="tab-pane fade show active border-left border-bottom border-right p-2" id="edit-task-main">
-                                        <form>
-                                            <div>
-                                                <label class="form-label fw-bold">Id</label>
-                                                <input class="form-control" type="text" readonly placeholder="Title" v-model="editModel.task.id" autofocus>
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label fw-bold">Title</label>
-                                                <input class="form-control" type="text" placeholder="Title" v-model="editModel.task.title" autofocus>
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label fw-bold">Description</label>
-                                                <input class="form-control" type="text" placeholder="Description"
-                                                    v-model="editModel.task.description">
-                                            </div>
-
-                                            <priority class="mt-2" v-model="editModel.task.priority"></priority>
-                                            <complexity class="mt-2" v-model="editModel.task.complexity"></complexity>
-
-                                            <div class="mt-2">
-                                                <label class="form-label fw-bold">Working Time</label>
-                                                <input class="form-control" type="text" placeholder="Working Time" v-model="editModel.workingTime">
-                                            </div>
-
-                                            <editable-tags class="mt-2"
-                                                           v-bind:task="editModel.task"
-                                                           v-bind:tags="getAllTags.filter(entry => editModel.task.tags.indexOf(entry) &lt; 0).sort()">
-                                            </editable-tags>
-                                        </form>
-                                    </div>
-
-                                    <div class="tab-pane fade border-left border-bottom border-right p-2" id="edit-task-working-times">
-                                        <table class="table table-striped">
-                                            <thead class="table-dark">
-                                                <th>Working Time</th>
-                                                <th>Created</th>
-                                                <th></th>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="entry in editModel.task.workingTimes">
-                                                    <td>{{ workingTimeToHumanReadable(entry.workingTime) }}</td>
-                                                    <td>{{ entry.created }}</td>
-                                                    <td>
-                                                        <span class="bi-trash"
-                                                              v-on:click="deleteWorkingTime(entry)"></span>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancel</span>
-                                </button>
-                                <button type="button" class="btn btn-primary"
-                                        data-bs-dismiss="modal"
-                                        v-on:click="updateTaskUI()">Update Task</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Delete subtask dialog for asking user -->
+                <yes-no-dialog id="delete-subtask-dialog" title="Delete Subtask"
+                            v-on:clicked-yes="deleteSubtask(model.task, model.subtask.index)">
+                    <p>Do you really want to delete '<span class="fw-bold">{{ model.subtask.title }}</span>'</p>
+                </yes-no-dialog>
             </div>
-
-            <!-- Add subtask task dialog for asking user -->
-            <div id="subtask-dialog" class="modal" tabindex="-1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header text-white bg-dark">
-                            <h5 v-if="editModel.subtask.index &gt;= 0" class="modal-title">Edit Subtask</h5>
-                            <h5 v-if="editModel.subtask.index &lt; 0" class="modal-title">Add Subtask</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form>
-                                <div>
-                                    <label class="form-label fw-bold">Id</label>
-                                    <input class="form-control" type="text" readonly placeholder="Id" v-model="editModel.task.id" autofocus>
-                                </div>
-                                <div class="mt-2">
-                                    <label class="form-label fw-bold">Title</label>
-                                    <input class="form-control" type="text" placeholder="Title" v-model="editModel.subtask.title" autofocus>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="updateTaskUI()">Update Task</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Delete task dialog for asking user -->
-            <yes-no-dialog id="delete-task-dialog" title="Delete Task"
-                           v-on:clicked-yes="deleteTask(deleteModel.task.id)">
-                <p>Do you really want to delete '<span class="fw-bold">{{ deleteModel.task.title }}</span>'</p>
-            </yes-no-dialog>
-
-            <!-- Delete subtask dialog for asking user -->
-            <yes-no-dialog id="delete-subtask-dialog" title="Delete Subtask"
-                           v-on:clicked-yes="deleteSubtask(deleteModel.task, deleteModel.subtask.index)">
-                <p>Do you really want to delete '<span class="fw-bold">{{ deleteModel.subtask.title }}</span>'</p>
-            </yes-no-dialog>
         </div>
-    
+
         <!-- Mixin's -->
+        <script src="/javascript/tasks/mixins/tasks.model.mixin.js"></script>
         <script src="/javascript/tasks/mixins/tasks.tools.mixin.js"></script>
         <script src="/javascript/tasks/mixins/tasks.crud.mixin.js"></script>
         <script src="/javascript/tasks/mixins/tasks.workingtime.mixin.js"></script>
@@ -412,7 +295,11 @@
         <script src="/javascript/tasks/components/complexity.js"></script>
         <script src="/javascript/tasks/components/yesnodialog.js"></script>
         <script src="/javascript/tasks/components/markdown.js"></script>
+        <script src="/javascript/tasks/components/editableTitle.js"></script>
+        <script src="/javascript/tasks/components/editableDescription.js"></script>
+        <script src="/javascript/tasks/components/editableWorkingtime.js"></script>
         <script src="/javascript/tasks/components/editableTags.js"></script>
+        <script src="/javascript/tasks/components/taskdialog.js"></script>
 
         <!-- Application -->
         <script src="/javascript/tasks/application.js"></script>

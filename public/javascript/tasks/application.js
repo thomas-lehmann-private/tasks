@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  */
 
-/* global $ TasksCrudMixin TasksToolsMixin TasksWorkingTimeMixin
+/* global $ TasksModelMixin TasksCrudMixin TasksToolsMixin TasksWorkingTimeMixin
    TagComponent AttributeComponent TasksEditMixin PriorityComponent
    localStorage ComplexityComponent YesNoDialogComponent MarkdownComponent
-   TasksFilterMixin EditableTagsComponent */
+   TasksFilterMixin EditableTagsComponent TaskDialogComponent */
 
 $(document).on('shown.bs.modal', '.modal', function () {
   $(this).find('[autofocus]').focus()
@@ -33,7 +33,7 @@ $(document).on('shown.bs.modal', '.modal', function () {
 
 const TasksManagerApp = {
   // registered mixins
-  mixins: [TasksToolsMixin, TasksCrudMixin, TasksWorkingTimeMixin,
+  mixins: [TasksModelMixin, TasksToolsMixin, TasksCrudMixin, TasksWorkingTimeMixin,
     TasksEditMixin, TasksFilterMixin],
 
   // registered components
@@ -44,18 +44,8 @@ const TasksManagerApp = {
     complexity: ComplexityComponent,
     yesNoDialog: YesNoDialogComponent,
     markdown: MarkdownComponent,
-    editableTags: EditableTagsComponent
-  },
-
-  data: function () {
-    return {
-      model: {
-        priorityMap: { 1: 'Very High', 2: 'High', 3: 'Normal', 4: 'Low', 5: 'Very Low' },
-        complexityMap: { 1: 'Very Complex', 2: 'Complex', 3: 'Moderate', 4: 'Easy', 5: 'Very Easy' },
-        newTask: { id: '', title: '', description: '', done: false, priority: 3, complexity: 3, workingTimes: [], tags: [] }
-      },
-      options: { showDoneTasks: false }
-    }
+    editableTags: EditableTagsComponent,
+    taskDialog: TaskDialogComponent
   },
 
   created: function () {

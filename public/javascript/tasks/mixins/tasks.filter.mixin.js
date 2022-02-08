@@ -40,10 +40,6 @@ const TasksFilterMixin = { // eslint-disable-line
       return tasks.filter(task => {
         const theSearchText = this.searchText.toLowerCase()
 
-        if (!this.options.showDoneTasks && task.done) {
-          return false
-        }
-
         const match = theSearchText.match(/tag:(.*)/)
         if (match !== null) {
           const tag = match[1]

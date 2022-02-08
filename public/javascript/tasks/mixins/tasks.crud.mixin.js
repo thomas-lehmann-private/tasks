@@ -86,18 +86,15 @@ const TasksCrudMixin = { // eslint-disable-line
      * Adding a new task posting data to the REST service.
      * On success the data is appended to the array.
      */
-    addTask: function () {
+    addTask: function (task) {
       $.ajax('/task', {
-        data: JSON.stringify(this.model.newTask),
+        data: JSON.stringify(task),
         contentType: 'application/json',
         type: 'POST',
         success: (data) => {
           this.tasks.push(data)
         }
       })
-
-      this.model.newTask.title = ''
-      this.model.newTask.description = ''
     },
 
     deleteTask: function (id) {
