@@ -178,24 +178,5 @@ const TasksEditMixin = { // eslint-disable-line
         }, 1000)
       }
     }
-  },
-
-  computed: {
-    /**
-     * Get all tags from any task.
-     *
-     * @returns array of all tags
-     */
-    getAllTags: function () {
-      const allTags = new Set()
-      for (let iTask = 0; iTask < this.tasks.length; ++iTask) {
-        if (this.tasks[iTask].tags) {
-          for (let iTag = 0; iTag < this.tasks[iTask].tags.length; ++iTag) {
-            allTags.add(this.tasks[iTask].tags[iTag])
-          }
-        }
-      }
-      return Array.from(allTags).sort()
-    }
   }
 }

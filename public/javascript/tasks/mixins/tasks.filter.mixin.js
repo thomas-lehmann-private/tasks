@@ -98,6 +98,12 @@ const TasksFilterMixin = { // eslint-disable-line
       return tasks.filter(task => !task.done)
     },
 
+    /**
+     * Get name for a custom filter.
+     *
+     * @param {function} customFilter filter function.
+     * @returns {string} name of the filter.
+     */
     getCustomFilterName: function (customFilter) {
       if (customFilter === this.getNotDoneTasks) {
         return 'Not Done'
@@ -110,6 +116,47 @@ const TasksFilterMixin = { // eslint-disable-line
       }
 
       return 'unknown'
+    },
+
+    /**
+     * Count the tasks which contain the given tag.
+     *
+     * @param {*} strTag tag to search for.
+     * @returns number of tasks containing given tag.
+     */
+    countTasksForTag: function (strTag) {
+      return this.tasks.filter(task => task.tags && task.tags.indexOf(strTag) >= 0).length
+    },
+
+    /**
+     * Get tasks filtered by tag.
+     *
+     * @param {string} strTag tag to use for filtering tasks.
+     * @returns filtered tasks.
+     */
+    getTasksForTag: function (strTag) {
+      return (tasks) => {
+        return tasks.filter(task => task.tags && task.tags.indexOf(strTag) >= 0)
+      }
+    }
+  },
+
+  computed: {
+    /**
+     * Get all tags from any task.
+     *
+     * @returns array of all tags
+     */
+    getAllTags: function () {
+      const allTags = new Set()
+      for (let iTask = 0; iTask < this.tasks.length; ++iTask) {
+        if (this.tasks[iTask].tags) {
+          for (let iTag = 0; iTag < this.tasks[iTask].tags.length; ++iTag) {
+            allTags.add(this.tasks[iTask].tags[iTag])
+          }
+        }
+      }
+      return Array.from(allTags).sort()
     }
   }
 }

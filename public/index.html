@@ -64,12 +64,28 @@
                         </tr>
                         <tr>
                             <td>Created Today</td>
-                            <td class=>
+                            <td>
                                 <a class="float-end" v-on:click="customFilter=getTasksCreatedToday">
                                     {{ getTasksCreatedToday(this.tasks).length }}</a>
                             </td>
                         </tr>
                     </table>
+                </table>
+
+                <!-- Displaying tag statistic -->
+                <table class="table table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Tag Statistics</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="tag in getAllTags">
+                            <td>{{ tag }}</td>
+                            <td><a class="float-end" v-on:click="customFilter=getTasksForTag(tag)">{{ countTasksForTag(tag) }}</a></td>
+                        </tr> 
+                    </tbody>
                 </table>
             </div>
 
