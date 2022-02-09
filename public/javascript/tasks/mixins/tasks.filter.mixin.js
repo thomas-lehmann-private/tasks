@@ -26,11 +26,22 @@ const TasksFilterMixin = { // eslint-disable-line
   data: function () {
     return {
       searchText: '',
-      customFilter: this.getNotDoneTasks
+      customFilter: this.getNotDoneTasks()
     }
   },
 
   methods: {
+    /**
+     * Create filter object with name and filter function.
+     *
+     * @param {string} name name of filter
+     * @param {function} filterFunction filter function for tasks
+     * @returns {object} custom filter
+     */
+    createCustomFilter: function (name, filterFunction) {
+      return { name: name, filterFunction: filterFunction }
+    },
+
     /*
      * Default filter that does always apply.
      *
@@ -60,62 +71,39 @@ const TasksFilterMixin = { // eslint-disable-line
     /**
      * Default sorted and filtered tasks are passed through.
      *
-     * @param {array} tasks all tasks filtered by search text and options.
-     * @returns {array} filtered tasks.
+     * @returns {object} filter for all tasks.
      */
-    getAllTasks: function (tasks) {
-      return tasks
+    getAllTasks: function () {
+      return this.createCustomFilter('All', (tasks) => tasks)
     },
 
     /**
      * Get all task that have been created today.
      *
-     * @param {array} tasks all tasks filtered by search text and options.
-     * @returns {array} tasks that have been created today.
+     * @returns {object} filter that provide tasks that have been created today.
      */
-    getTasksCreatedToday: function (tasks) {
+    getTasksCreatedToday: function () {
       const self = this
-      return tasks.filter(task => self.isToday(new Date(task.created)))
+      return this.createCustomFilter(
+        'Created Today', (tasks) => tasks.filter(task => self.isToday(new Date(task.created))))
     },
 
     /**
      * Get all task that are done.
      *
-     * @param {array} tasks all tasks filtered by search text and options.
-     * @returns {array} tasks that are done.
+     * @returns {object} filter that provide tasks that are done.
      */
-    getDoneTasks: function (tasks) {
-      return tasks.filter(task => task.done)
+    getDoneTasks: function () {
+      return this.createCustomFilter('Done', (tasks) => tasks.filter(task => task.done))
     },
 
     /**
      * Get all task that are not done.
      *
-     * @param {array} tasks all tasks filtered by search text and options.
-     * @returns {array} tasks that are not done.
+     * @returns {object} filter that provide tasks that are not done.
      */
-    getNotDoneTasks: function (tasks) {
-      return tasks.filter(task => !task.done)
-    },
-
-    /**
-     * Get name for a custom filter.
-     *
-     * @param {function} customFilter filter function.
-     * @returns {string} name of the filter.
-     */
-    getCustomFilterName: function (customFilter) {
-      if (customFilter === this.getNotDoneTasks) {
-        return 'Not Done'
-      } else if (customFilter === this.getDoneTasks) {
-        return 'Done'
-      } else if (customFilter === this.getTasksCreatedToday) {
-        return 'Created Today'
-      } else if (customFilter === this.getAllTasks) {
-        return 'All'
-      }
-
-      return 'unknown'
+    getNotDoneTasks: function () {
+      return this.createCustomFilter('Not Done', (tasks) => tasks.filter(task => !task.done))
     },
 
     /**
@@ -131,13 +119,12 @@ const TasksFilterMixin = { // eslint-disable-line
     /**
      * Get tasks filtered by tag.
      *
-     * @param {string} strTag tag to use for filtering tasks.
-     * @returns filtered tasks.
+     * @param {string} tag tag to use for filtering tasks.
+     * @returns {object} filter for providing filtered tasks by given tag.
      */
-    getTasksForTag: function (strTag) {
-      return (tasks) => {
-        return tasks.filter(task => task.tags && task.tags.indexOf(strTag) >= 0)
-      }
+    getTasksForTag: function (tag) {
+      return this.createCustomFilter(
+        "Tag '" + tag + "'", (tasks) => tasks.filter(task => task.tags && task.tags.indexOf(tag) >= 0))
     }
   },
 

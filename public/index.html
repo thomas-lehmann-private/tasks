@@ -30,22 +30,22 @@
                         <tr>
                             <td>All</td>
                             <td>
-                                <a class="float-end" v-on:click="customFilter=getAllTasks">
+                                <a class="float-end" v-on:click="customFilter=getAllTasks()">
                                     {{ tasks.length }}</a>
                             </td>
                         </tr>
                         <tr>
                             <td>Not Done</td>
                             <td>
-                                <a class="float-end" v-on:click="customFilter=getNotDoneTasks">
-                                    {{ getNotDoneTasks(tasks).length }}</a>
+                                <a class="float-end" v-on:click="customFilter=getNotDoneTasks()">
+                                    {{ getNotDoneTasks().filterFunction(tasks).length }}</a>
                             </td>
                         </tr>
                         <tr>
                             <td>Done</td>
                             <td>
-                                <a class="float-end" v-on:click="customFilter=getDoneTasks">
-                                    {{ getDoneTasks(tasks).length }}</a>
+                                <a class="float-end" v-on:click="customFilter=getDoneTasks()">
+                                    {{ getDoneTasks().filterFunction(tasks).length }}</a>
                             </td>
                         </tr>
                         <tr>
@@ -65,8 +65,8 @@
                         <tr>
                             <td>Created Today</td>
                             <td>
-                                <a class="float-end" v-on:click="customFilter=getTasksCreatedToday">
-                                    {{ getTasksCreatedToday(this.tasks).length }}</a>
+                                <a class="float-end" v-on:click="customFilter=getTasksCreatedToday()">
+                                    {{ getTasksCreatedToday().filterFunction(tasks).length }}</a>
                             </td>
                         </tr>
                     </table>
@@ -144,7 +144,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th></th>
-                            <th>Tasks <span class="small">(Filter: {{ getCustomFilterName(customFilter) }})</span></th>
+                            <th>Tasks <span class="small">(Filter: {{ customFilter.name }})</span></th>
                             <th></th>
                         </tr>
                     </thead>

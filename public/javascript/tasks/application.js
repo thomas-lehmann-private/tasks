@@ -119,7 +119,7 @@ const TasksManagerApp = {
 
   computed: {
     filteredTasks: function () {
-      return this.customFilter(this.getFilteredTasks(this.sortedTasks()))
+      return this.customFilter.filterFunction(this.getFilteredTasks(this.sortedTasks()))
     }
   }
 }
