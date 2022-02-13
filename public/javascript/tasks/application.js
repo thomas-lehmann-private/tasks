@@ -36,18 +36,6 @@ const TasksManagerApp = {
   mixins: [TasksModelMixin, TasksToolsMixin, TasksCrudMixin, TasksWorkingTimeMixin,
     TasksEditMixin, TasksFilterMixin],
 
-  // registered components
-  components: {
-    tag: TagComponent,
-    attribute: AttributeComponent,
-    priority: PriorityComponent,
-    complexity: ComplexityComponent,
-    yesNoDialog: YesNoDialogComponent,
-    markdown: MarkdownComponent,
-    editableTags: EditableTagsComponent,
-    taskDialog: TaskDialogComponent
-  },
-
   created: function () {
     // get all tasks from the REST service
     this.getTasks()
@@ -125,4 +113,12 @@ const TasksManagerApp = {
 }
 
 const app = Vue.createApp(TasksManagerApp) // eslint-disable-line
+app.component('markdown', MarkdownComponent)
+app.component('tag', TagComponent)
+app.component('attribute', AttributeComponent)
+app.component('priority', PriorityComponent)
+app.component('complexity', ComplexityComponent)
+app.component('yesNoDialog', YesNoDialogComponent)
+app.component('editableTags', EditableTagsComponent)
+app.component('taskDialog', TaskDialogComponent)
 app.mount('#application')

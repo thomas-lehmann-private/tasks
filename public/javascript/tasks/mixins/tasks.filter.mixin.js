@@ -89,6 +89,18 @@ const TasksFilterMixin = { // eslint-disable-line
     },
 
     /**
+     * Get all task that have been changed today.
+     *
+     * @returns {object} filter that provide tasks that have been changed today.
+     */
+    getTasksChangedToday: function () {
+      const self = this
+      return this.createCustomFilter(
+        'Changed Today', (tasks) => tasks.filter(
+          task => task.created !== task.changed && self.isToday(new Date(task.changed))))
+    },
+
+    /**
      * Get all task that are done.
      *
      * @returns {object} filter that provide tasks that are done.

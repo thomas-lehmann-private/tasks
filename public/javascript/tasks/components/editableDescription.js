@@ -28,9 +28,28 @@ const EditableDescriptionComponent = { // eslint-disable-line
   template: `
     <div>
         <label class="form-label fw-bold">Description</label>
-        <input class="form-control" type="text" placeholder="Enter Description"
-               v-bind:value="modelValue"
-               v-on:input="$emit('update:modelValue', $event.target.value)">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <button class="nav-link active" type="button"
+                        data-bs-toggle="tab" data-bs-target="#task-description-edit">Edit</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" type="button"
+                        data-bs-toggle="tab" data-bs-target="#task-description-preview">Preview</button>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active border-left border-bottom border-right p-2" id="task-description-edit">
+                <textarea class="form-control" type="text" rows=3 placeholder="Enter Description"
+                       v-bind:value="modelValue"
+                       v-on:input="$emit('update:modelValue', $event.target.value)"></textarea>
+            </div>
+
+            <div class="tab-pane border-left border-bottom border-right p-2" id="task-description-preview">
+                <markdown v-bind:text="modelValue"></markdown>
+            </div>
+        </div>
     </div>
   `
 }

@@ -27,7 +27,7 @@ const YesNoDialogComponent = { // eslint-disable-line
   emits: ['clickedYes', 'clickedNo', 'clickedCancel'],
   template: `
     <div v-bind:id="id" class="modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-white bg-dark">
                     <h5 class="modal-title">{{ title }}</h5>

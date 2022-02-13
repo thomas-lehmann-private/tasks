@@ -69,6 +69,13 @@
                                     {{ getTasksCreatedToday().filterFunction(tasks).length }}</a>
                             </td>
                         </tr>
+                        <tr>
+                            <td>Changed Today</td>
+                            <td>
+                                <a class="float-end" v-on:click="customFilter=getTasksChangedToday()">
+                                    {{ getTasksChangedToday().filterFunction(tasks).length }}</a>
+                            </td>
+                        </tr>
                     </table>
                 </table>
 
@@ -161,7 +168,7 @@
                                 </div>
 
                                 <!-- Description -->
-                                {{ task.description }}
+                                <markdown v-bind:text="task.description"></markdown>
 
                                 <!-- Subtasks (optional) -->
                                 <table v-if="task.subtasks && task.subtasks.length > 0" class="mt-2 table table-sm table-striped">
@@ -255,20 +262,16 @@
 
                 <!-- Add subtask task dialog for asking user -->
                 <div id="subtask-dialog" class="modal" tabindex="-1">
-                    <div class="modal-dialog">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header text-white bg-dark">
-                                <h5 v-if="model.subtask.index &gt;= 0" class="modal-title">Edit Subtask</h5>
-                                <h5 v-if="model.subtask.index &lt; 0" class="modal-title">Add Subtask</h5>
+                                <h5 v-if="model.subtask.index &gt;= 0" class="modal-title">Edit Subtask ({{ model.task.title }})</h5>
+                                <h5 v-if="model.subtask.index &lt; 0" class="modal-title">Add Subtask ({{ model.task.title }})</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <form>
                                     <div>
-                                        <label class="form-label fw-bold">Id</label>
-                                        <input class="form-control" type="text" readonly placeholder="Id" v-model="model.task.id" autofocus>
-                                    </div>
-                                    <div class="mt-2">
                                         <label class="form-label fw-bold">Title</label>
                                         <input class="form-control" type="text" placeholder="Title" v-model="model.subtask.title" autofocus>
                                     </div>

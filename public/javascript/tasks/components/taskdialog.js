@@ -60,11 +60,12 @@ const TaskDialogComponent = { // eslint-disable-line
 
   template: `
     <div v-bind:id="id" class="modal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header text-white bg-dark">
                     <h5 class="modal-title">{{ getDialogTitle(model.task) }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                    <small v-if="model.task.id.length > 0" class="ms-3">Id: {{model.task.id}}</small>
+                    <button type="button" class="btn-close bg-light" data-bs-dismiss="modal"
                             v-on:click="$emit('clickedCancel')"></button>
                 </div>
 
@@ -82,11 +83,6 @@ const TaskDialogComponent = { // eslint-disable-line
 
                     <div class="tab-content">
                         <div class="tab-pane fade show active border-left border-bottom border-right p-2" id="task-main">
-                            <div v-if="model.task.id.length > 0">
-                                <label class="form-label fw-bold">Id</label>
-                                <input class="form-control" type="text" readonly placeholder="Title" v-model="model.task.id" autofocus>
-                            </div>
-
                             <editable-title class="mt-2" v-model="model.task.title"></editable-title>
                             <editable-description class="mt-2" v-model="model.task.description"></editable-description>
                             <priority class="mt-2" v-model="model.task.priority"></priority>
